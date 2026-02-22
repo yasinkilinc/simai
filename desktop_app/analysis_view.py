@@ -104,7 +104,7 @@ class AnalysisView(QWidget):
         visuals_layout.setSpacing(10)
         
         self.create_visuals_section(visuals_layout)
-        content_layout.addWidget(visuals_container, stretch=4)
+        content_layout.addWidget(visuals_container, stretch=3)
         
         # 2. Data Section (Bottom)
         data_container = QWidget()
@@ -113,7 +113,7 @@ class AnalysisView(QWidget):
         data_layout.setSpacing(5)
         
         self.create_data_section(data_layout)
-        content_layout.addWidget(data_container, stretch=6)
+        content_layout.addWidget(data_container, stretch=5)
         
         layout.addWidget(content_widget)
         
@@ -208,7 +208,8 @@ class AnalysisView(QWidget):
         front_layout.setContentsMargins(0, 0, 0, 0)
         
         self.img_label = AdaptiveImageLabel("Analiz bekleniyor...")
-        self.img_label.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        self.img_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.img_label.setMinimumSize(250, 250)
         self.img_label.setStyleSheet("background-color: #11111b; border-radius: 4px;")
         front_layout.addWidget(self.img_label)
         
@@ -220,7 +221,8 @@ class AnalysisView(QWidget):
         side_layout.setContentsMargins(0, 0, 0, 0)
         
         self.side_img_label = AdaptiveImageLabel("Yan profil yok")
-        self.side_img_label.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        self.side_img_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.side_img_label.setMinimumSize(250, 250)
         self.side_img_label.setStyleSheet("background-color: #11111b; border-radius: 4px;")
         side_layout.addWidget(self.side_img_label)
         
@@ -254,6 +256,7 @@ class AnalysisView(QWidget):
 
         self.view_3d = gl.GLViewWidget()
         self.view_3d.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.view_3d.setMinimumSize(250, 250)
         self.view_3d.setCameraPosition(distance=500)
         self.view_3d.setBackgroundColor('#11111b')
         v3d_layout.addWidget(self.view_3d)
@@ -1590,18 +1593,24 @@ class AnalysisView(QWidget):
             ai_text = "Yüz hatlarınızın analizine göre genel karakter haritanız:\n\n"
             
             # Kategorileri birleştir
-            all_traits = []
+            all_traits_str = []
             for category in ["positive", "negative", "neutral"]:
                 if category in report['analysis']:
                     for trait in report['analysis'][category]:
-                        if trait not in all_traits:
-                            all_traits.append(trait)
+                        # trait can be string or dict (depending on interpreter version)
+                        trait_val = trait.get('trait', str(trait)) if isinstance(trait, dict) else str(trait)
+                        # Clean up physical description
+                        if ':' in trait_val:
+                            trait_val = trait_val.split(':')[0].strip()
+                            
+                        if trait_val not in all_traits_str:
+                            all_traits_str.append(trait_val)
             
-            if all_traits:
+            if all_traits_str:
                 # Dinamik bir paragraf oluştur (basit bir template ile)
-                ai_text += f"Bu analize göre genel olarak {', '.join(all_traits[:3])} gibi özellikler öne çıkıyor. "
-                if len(all_traits) > 3:
-                    ai_text += f"Bunun yanı sıra {', '.join(all_traits[3:6])} yönleriniz de bulunmakta. "
+                ai_text += f"Bu analize göre genel olarak {', '.join(all_traits_str[:3])} gibi özellikler öne çıkıyor. "
+                if len(all_traits_str) > 3:
+                    ai_text += f"Bunun yanı sıra {', '.join(all_traits_str[3:6])} yönleriniz de bulunmakta. "
                 
                 ai_text += "Yüzünüzdeki metrik orantılar (alın, göz, burun, çene uyumu) karakterinizde çeşitli denge unsurlarını işaret ediyor."
             else:

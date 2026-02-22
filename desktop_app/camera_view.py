@@ -132,11 +132,6 @@ class CameraView(QWidget):
         # Camera Controls
         controls_layout = QHBoxLayout()
         
-        self.btn_start_camera = QPushButton("📹 Kamerayı Başlat")
-        self.btn_start_camera.setMinimumHeight(45)
-        self.btn_start_camera.clicked.connect(self.start_camera)
-        controls_layout.addWidget(self.btn_start_camera)
-        
         self.btn_capture = QPushButton("📸 Fotoğrafı Çek")
         self.btn_capture.setMinimumHeight(45)
         self.btn_capture.setEnabled(False)
@@ -215,6 +210,27 @@ class CameraView(QWidget):
         right_layout.setSpacing(15)
         
         # Position Selection Section
+        # Start Camera Button (Moved here for better UX)
+        self.btn_start_camera = QPushButton("📹 Kamerayı Başlat")
+        self.btn_start_camera.setMinimumHeight(55)
+        self.btn_start_camera.clicked.connect(self.start_camera)
+        self.btn_start_camera.setStyleSheet("""
+            QPushButton {
+                background-color: #f9e2af;
+                color: #1e1e2e;
+                font-size: 15px;
+                font-weight: bold;
+                border-radius: 8px;
+            }
+            QPushButton:hover {
+                background-color: #fab387;
+            }
+        """)
+        right_layout.addWidget(self.btn_start_camera)
+        
+        # Spacer
+        right_layout.addSpacing(10)
+        
         right_layout.addWidget(QLabel("📌 Pozisyon Seçin"))
         
         # Front Slot
@@ -311,21 +327,17 @@ class CameraView(QWidget):
         self.btn_slot_front.setStyleSheet(active_style)
         self.btn_slot_side.setStyleSheet(active_style)
         
+        camera_running = self.camera_thread is not None and self.camera_thread.isRunning()
+        
         # Show existing image if any
         if self.images[slot_id] is not None:
-            # Stop camera if running
-            if self.camera_thread is not None and self.camera_thread.isRunning():
-                self.camera_thread.stop()
-                self.btn_start_camera.setEnabled(True)
-                self.btn_capture.setEnabled(False)
-                self.status_message.emit("📷 Kamera durduruldu - Fotoğraf görüntüleniyor")
-
-            self.display_frame(self.images[slot_id])
+            if not camera_running:
+                self.display_frame(self.images[slot_id])
             if hasattr(self, 'btn_save'):
                 self.btn_save.setEnabled(True)
         else:
             # Clear display or show camera if running
-            if self.camera_thread is None or not self.camera_thread.isRunning():
+            if not camera_running:
                 self.display_label.clear()
                 self.display_label.setText(f"{'Ön Yüz' if slot_id == 'front' else 'Yan Profil'} için fotoğraf çekin veya seçin")
                 if hasattr(self, 'btn_save'):
@@ -446,14 +458,14 @@ class CameraView(QWidget):
         self.display_label.setPixmap(QPixmap.fromImage(qt_image))
     
     def capture_photo(self):
-        """Fotoğraf çek - kamera açık kalır ve otomatik slot geçişi yapar"""
+        """Fotoğraf çek - kamera açık kalır ve ilgili slota kaydeder"""
         if self.current_frame is not None:
             # Save to current slot
             self.images[self.active_slot] = self.current_frame.copy()
             
             # Update slot button text/icon
             btn = self.btn_slot_front if self.active_slot == 'front' else self.btn_slot_side
-            btn.setText(f"{'ÖnYüz' if self.active_slot == 'front' else 'Yan Profil'} (✅ Hazır)")
+            btn.setText(f"{'Ön Yüz' if self.active_slot == 'front' else 'Yan Profil'} (✅ Hazır)")
             
             # Enable analyze button if front photo exists
             if self.images['front'] is not None:
@@ -461,19 +473,10 @@ class CameraView(QWidget):
             
             self.status_message.emit(f"✅ {self.active_slot.capitalize()} fotoğrafı çekildi")
             
-            # Kamerayı KAPATMA - açık bırak
-            # Ön profil çekildiyse otomatik yan profile geç
             if self.active_slot == 'front' and self.images['side'] is None:
-                self.set_active_slot('side')
-                self.status_message.emit("✅ Ön yüz hazır! Şimdi yan profilinizi çekin (veya analiz edin)")
+                self.status_message.emit("✅ Ön yüz hazır! Şimdi yan profilinizi seçip çekin (veya analiz edin)")
             elif self.active_slot == 'side':
-                # İki foto da çekildiyse kamerayı durdur
-                if self.camera_thread is not None and self.camera_thread.isRunning():
-                    self.camera_thread.stop()
-                    self.btn_start_camera.setEnabled(True)
-                    self.btn_capture.setEnabled(False)
-                self.display_frame(self.images[self.active_slot])
-                self.status_message.emit("✅ Her iki fotoğraf hazır! Analiz edebilirsiniz →")
+                self.status_message.emit("✅ Yan profil hazır! Analiz edebilirsiniz →")
             
             self.btn_save.setEnabled(True)
             self.btn_retake.setVisible(True)
