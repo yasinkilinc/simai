@@ -1,0 +1,89 @@
+{
+  "fizyonomi_master_veritabani": {
+    "sistem_bilgisi": {
+      "aciklama": "Bu veritabani, yaziliminizin bir kisinin karakter analizini yapmasi icin gereken tum anatomik detaylari ve etiketleri (tags) icerir. Ayni etiketin farkli organlarda 3 veya daha fazla kez bulunmasi (capraz dogrulama) o kisilik ozelligini kesinlestirir."
+    },
+    "sac_ve_sac_cizgisi": [
+      {"varyasyon": "Kıvırcık Saç", "anlam": "Aşırı duygusal, enerjik, hayır diyemeyen, odaklanma problemi yaşayan.", "etiketler": ["Duygusal", "Enerjik", "Odak_Problemi"]},
+      {"varyasyon": "Düz Saç", "anlam": "Kuralcı, net, mantıksal düşünen, hedef odaklı.", "etiketler": ["Mantıksal", "Kuralcı", "Garantici"]},
+      {"varyasyon": "İnce Telli Saç", "anlam": "Çok ince düşünen, evhamlı, kırılgan, bazen kurnazlığa meyilli.", "etiketler": ["Hassas", "Kırılgan", "Evhamlı"]},
+      {"varyasyon": "Kalın ve Gür Saç", "anlam": "İradesi çok güçlü, dayanıklı, inatçı, fiziksel olarak güçlü.", "etiketler": ["İradeli", "Güçlü", "İnatçı"]},
+      {"varyasyon": "M Tipi Saç Çizgisi", "anlam": "Empati yeteneği yüksek, ailesine düşkün, sıcakkanlı.", "etiketler": ["Empatik", "Aileci"]},
+      {"varyasyon": "Dul Zirvesi (V Tipi)", "anlam": "Aşırı detaycı, mükemmeliyetçi, üretken zekalı fakat tartışmacı.", "etiketler": ["Detaycı", "Tartışmacı", "Zeki"]},
+      {"varyasyon": "Düzensiz / Zikzak Saç Çizgisi", "anlam": "Dengesiz düşünce yapısı, kaotik ilişkiler, tutarsızlık.", "etiketler": ["Dengesiz", "Tutarsız", "Manipülatif"]},
+      {"varyasyon": "Kısa Saç (Kadınlarda)", "anlam": "Karşı cinsle iletişimi kesme isteği, radikal karar alma, geçmişi silme.", "etiketler": ["Radikal", "İletişime_Kapalı"]}
+    ],
+    "alin_yapisi": [
+      {"varyasyon": "Dikeyde Uzun Alın", "anlam": "Entelektüel, zeka kapasitesi yüksek, hızlı öğrenen, soyut düşünebilen.", "etiketler": ["Zeki", "Entelektüel", "Analitik"]},
+      {"varyasyon": "Dikeyde Kısa Alın", "anlam": "Pratik düşünen, iradesi zayıf, aklına geleni pat diye söyleyen (patavatsız).", "etiketler": ["Pratik", "Patavatsız", "Zayıf_İrade"]},
+      {"varyasyon": "Geniş Alın (Yatayda Uzun)", "anlam": "Geniş perspektif, vizyoner, bütünü gören, liderlik vasfı yüksek.", "etiketler": ["Vizyoner", "Lider", "Hoşgörülü"]},
+      {"varyasyon": "Dar Alın (Yatayda Kısa)", "anlam": "Dar bakış açısı, odaklanma sorunu, sabit fikirli.", "etiketler": ["Sabit_Fikirli", "Dar_Görüşlü"]},
+      {"varyasyon": "Geriye Yatık Alın", "anlam": "İletişim becerisi yüksek, diplomatik, laf ebesi.", "etiketler": ["İletişimi_Güçlü", "Diplomatik"]},
+      {"varyasyon": "Dik Alın (Yandan bakıldığında)", "anlam": "Dik başlı, kuru inatçı, sözünü esirgemeyen, sert mizaçlı.", "etiketler": ["İnatçı", "Sert", "Kuralcı"]},
+      {"varyasyon": "Merhamet Çatısı (Kaş üstü şişkinlik)", "anlam": "Çok merhametli, yardımsever, korumacı.", "etiketler": ["Merhametli", "Korumacı"]}
+    ],
+    "kas_yapisi": [
+      {"varyasyon": "Gür ve Kalın Kaş", "anlam": "Yüksek yaşam enerjisi (libido/testosteron), mücadeleci, fiziki gücü seven.", "etiketler": ["Mücadeleci", "Enerjik", "Hırslı"]},
+      {"varyasyon": "İnce ve Seyrek Kaş", "anlam": "Fiziksel gücü düşük, ince planlar yapan, zihinsel odaklı.", "etiketler": ["Kurnaz", "Hassas", "Zihinsel"]},
+      {"varyasyon": "Tek Kaş (Birleşik)", "anlam": "Yeniliğe kapalı, sabit fikirli, kıskanç, ailesine aşırı korumacı.", "etiketler": ["Sabit_Fikirli", "Korumacı", "Kıskanç"]},
+      {"varyasyon": "Kısa Kaş", "anlam": "Vicdan yoksunluğu, acımasızlık, işini bitirip giden yapı.", "etiketler": ["Acımasız", "Vicdansız", "Sert"]},
+      {"varyasyon": "Göze Yakın Kaş", "anlam": "Sabırsız, tez canlı, hemen sonuca ulaşmak isteyen, dakik.", "etiketler": ["Sabırsız", "Aceleci", "Hırslı"]},
+      {"varyasyon": "Gözden Uzak Kaş", "anlam": "Soğukkanlı, sabırlı, anı yaşayan, zenginlik potansiyeli yüksek.", "etiketler": ["Sabırlı", "Soğukkanlı", "Zenginlik"]},
+      {"varyasyon": "Aşağı Sarkan Kaş Uçları", "anlam": "Gözlemci, tefekkür eden, maneviyatı güçlü, araştırmacı.", "etiketler": ["Maneviyatlı", "Gözlemci", "Analitik"]},
+      {"varyasyon": "Yukarı Kalkan Kaş Uçları", "anlam": "Büyük vizyon sahibi, hırslı, kurnaz, hedefleri yüksek.", "etiketler": ["Vizyoner", "Hırslı", "Kurnaz"]},
+      {"varyasyon": "Kırık / Kesik Kaş", "anlam": "Hayatında büyük bir travma, ihanet veya iflas yaşamış, ilişkileri bozuk.", "etiketler": ["Travmatik", "Güvensiz", "İstikrarsız"]}
+    ],
+    "goz_yapisi": [
+      {"varyasyon": "Büyük Gözler", "anlam": "Dışa dönük, duygusal, açık sözlü, saf, kolay kanan.", "etiketler": ["Duygusal", "Saf", "Dışa_Dönük"]},
+      {"varyasyon": "Kısık ve İnce Gözler (Avcı)", "anlam": "İçe dönük, kurnaz, fırsat kollayan, cesur ve pinti.", "etiketler": ["Kurnaz", "İçten_Pazarlıklı", "Cesur"]},
+      {"varyasyon": "Çukur Gözler", "anlam": "Ketum, sır saklayan, gizemli, arka planda plan yapan, kirli çıkı.", "etiketler": ["Sır_Küpü", "Gizemli", "Kurnaz"]},
+      {"varyasyon": "Pörtlek (Dışarı Çıkık) Gözler", "anlam": "Çok konuşan ama içi boş kibir yapan, kendi çevresine cesur ama dışarıya korkak.", "etiketler": ["Korkak", "Geveze", "Kibirli"]},
+      {"varyasyon": "Dış Kantus Aşağı Eğik", "anlam": "Kindar, yapılanı unutmayan, memnuniyetsiz, tatmin olmayan.", "etiketler": ["Kindar", "Memnuniyetsiz", "İntikamcı"]},
+      {"varyasyon": "İç Kantus Aşağı Eğik", "anlam": "Çok zeki, sivri dilli, acımasızca laf sokan ve kırıcı.", "etiketler": ["Sivri_Dilli", "Zeki", "Kırıcı"]},
+      {"varyasyon": "Göz Kapağı Düşük", "anlam": "Savunma mekanizması yüksek, çok eleştiri almış, rol yapabilen.", "etiketler": ["Savunmacı", "Oyuncu", "Bastırılmış_Öfke"]},
+      {"varyasyon": "Sanpaku Göz (Göz akı alttan görünen)", "anlam": "Aşırı stresli, potansiyel psikopat, gözü dönmeye müsait.", "etiketler": ["Psikopat", "Tehlikeli", "Stresli"]}
+    ],
+    "burun_yapisi": [
+      {"varyasyon": "Kemerli Burun", "anlam": "Gururlu, başkasına boyun eğmeyen, mücadeleci, zorluklara direnen.", "etiketler": ["Gururlu", "Mücadeleci", "Lider"]},
+      {"varyasyon": "Büyük ve Etli Burun", "anlam": "Maddi hırs, yeme-içme ve konfora düşkünlük, tembelliğe meyil.", "etiketler": ["Hırslı", "Konfor_Düşkünü", "Maddiyatçı"]},
+      {"varyasyon": "İnce Burun", "anlam": "Hassas, kırılgan, alıngan, yalnız çalışmayı seven, ortaklığa gelemeyen.", "etiketler": ["Hassas", "Bireysel", "Alıngan"]},
+      {"varyasyon": "Gaga Burun (Ucu Aşağı Düşük)", "anlam": "Çok kurnaz, başkalarının üzerinden menfaat sağlayan, bencil.", "etiketler": ["Kurnaz", "Manipülatif", "Bencil"]},
+      {"varyasyon": "Top Burun (Yuvarlak Uçlu)", "anlam": "Esprili, mizah yeteneği güçlü, parayı ve duyguyu biriktiren.", "etiketler": ["Esprili", "Biriktirici", "Duygusal"]},
+      {"varyasyon": "Burun Ucu Kalkık", "anlam": "Cömert, elinde para tutamayan, meraklı ve sosyal.", "etiketler": ["Cömert", "Meraklı", "Müsrif"]},
+      {"varyasyon": "Burun Delikleri Karşıdan Görünen", "anlam": "Narsisizm, kendini öncelleyen, başkasının fikrini umursamayan.", "etiketler": ["Narsist", "Bencil", "Kibirli"]},
+      {"varyasyon": "Geniş Burun Delikleri", "anlam": "Çok derin nefes alan, öfke kontrol problemi yaşayan, çabuk parlayan.", "etiketler": ["Öfkeli", "Agresif", "Cesur"]},
+      {"varyasyon": "Alından Düz Başlayan Burun (Çukursuz)", "anlam": "Sınır tanımayan, arzularının esiri, çapkınlığa ve suç işlemeye meyilli.", "etiketler": ["Sınır_Tanımaz", "Dürtüsel", "Çapkın"]}
+    ],
+    "filtrum_ve_dudaklar": [
+      {"varyasyon": "Derin ve Belirgin Filtrum", "anlam": "Üretken zeka, yüksek başarı potansiyeli, sağlıklı üreme sistemi.", "etiketler": ["Üretken", "Başarılı", "Sağlıklı"]},
+      {"varyasyon": "Düz/Silik Filtrum", "anlam": "Sağlık problemleri (rahim/genital), düşük yaşam enerjisi, kısırlık.", "etiketler": ["Hassas_Sağlık", "Düşük_Enerji"]},
+      {"varyasyon": "Genişleyen Filtrum", "anlam": "Yaş ilerledikçe artan maddi ve manevi zenginlik, açılan nasip.", "etiketler": ["Zenginlik", "Başarılı"]},
+      {"varyasyon": "Kalın Üst Dudak", "anlam": "Cömert, kendisi hakkında konuşmayı seven, eleştiriye açık.", "etiketler": ["Cömert", "Açık_Sözlü", "Dışa_Dönük"]},
+      {"varyasyon": "İnce Üst Dudak", "anlam": "Sır tutan, ketum, eleştiriye tahammülsüz, hesap soran.", "etiketler": ["Ketum", "Sır_Küpü", "Bencil"]},
+      {"varyasyon": "Kalın Alt Dudak", "anlam": "İkna kabiliyeti yüksek, mübalağa (abartı) yapan, dedikoduya meyilli.", "etiketler": ["İkna_Edici", "Abartılı", "Geveze"]},
+      {"varyasyon": "Asimetrik (Yamuk) Ağız", "anlam": "Konuşurken lafı eğip büken, manipülatif, yalan söyleyen, gizli narsist.", "etiketler": ["Manipülatif", "Yalancı", "Güvenilmez"]}
+    ],
+    "cene_ve_yanaklar": [
+      {"varyasyon": "Geniş ve Köşeli Çene", "anlam": "Otoriter, savaşçı, tartışmadan kaçmayan, iradesi demir gibi.", "etiketler": ["İradeli", "Savaşçı", "Lider"]},
+      {"varyasyon": "Sivri Çene", "anlam": "Detaycı, eleştirel, mükemmeliyetçi, kurnaz zekalı.", "etiketler": ["Detaycı", "Eleştirel", "Mükemmeliyetçi"]},
+      {"varyasyon": "Geride (Çekik) Çene", "anlam": "Kavgadan kaçan, pasif, iradesi zayıf, boyun eğen.", "etiketler": ["Pasif", "Çekimser", "Zayıf_İrade"]},
+      {"varyasyon": "Gamzeli Çene", "anlam": "Ekstra irade gücü, sanat yeteneği, yüksek çekicilik.", "etiketler": ["Çekici", "Sanatkar", "İradeli"]},
+      {"varyasyon": "Fil Yanağı (Aşağı Sarkık)", "anlam": "Mükemmel hafıza, kin veya iyiliği unutmaz, duygu biriktirir.", "etiketler": ["Hafızası_Güçlü", "Kindar", "Duygusal"]},
+      {"varyasyon": "Elmacık Kemiği Belirgin", "anlam": "Güç, mücadele, inatçılık ve otorite isteği.", "etiketler": ["Güçlü", "Mücadeleci", "İnatçı"]}
+    ],
+    "eller_ve_parmaklar": [
+      {"varyasyon": "Temel El (Kısa, Şişkin)", "anlam": "Dürtüsel, fiziksel şiddete meyilli, emir almayı seven ama işten kaçan (usta eli).", "etiketler": ["Dürtüsel", "Kaba", "Fiziksel"]},
+      {"varyasyon": "Kare El", "anlam": "Kurallı, analitik, pratik, sözünün eri, gerçekçi.", "etiketler": ["Disiplinli", "Gerçekçi", "Güvenilir"]},
+      {"varyasyon": "Spatula El", "anlam": "Hiperaktif, mucit, devrimci, enerjisi tükenmeyen.", "etiketler": ["Yenilikçi", "Enerjik", "Diktatör"]},
+      {"varyasyon": "Konik El (Zarif)", "anlam": "Sanatkar, duygusal, romantik, gösterişi seven, tembel.", "etiketler": ["Sanatkar", "Duygusal", "Tembel"]},
+      {"varyasyon": "Uzun İşaret Parmağı (Jüpiter)", "anlam": "Liderlik, diktatörlük, aşırı hırs, narsisizm.", "etiketler": ["Lider", "Diktatör", "Narsist"]},
+      {"varyasyon": "Kısa İşaret Parmağı", "anlam": "Özgüven eksikliği, yönetilmeyi sevme, takım oyuncusu.", "etiketler": ["Özgüvensiz", "Uyumlu", "Pasif"]},
+      {"varyasyon": "Uzun Orta Parmak (Satürn)", "anlam": "Aşırı gerçekçi, melankolik, sosyal hayattan kopuk.", "etiketler": ["Melankolik", "Karamsar", "Gerçekçi"]},
+      {"varyasyon": "Uzun Yüzük Parmağı (Güneş)", "anlam": "Kumarbaz ruhlu, aşırı risk alan, şöhret tutkunu.", "etiketler": ["Risk_Alan", "Şöhret_Tutkunu", "Girişimci"]},
+      {"varyasyon": "Uzun Serçe Parmak (Merkür)", "anlam": "Mükemmel hitabet, ticaret zekası, kurnazlık, manipülasyon.", "etiketler": ["İletişim_Dehası", "Kurnaz", "Manipülatif"]},
+      {"varyasyon": "Kısa Serçe Parmak", "anlam": "İletişim sorunu, kıskançlık, yetersizlik hissi, saflık.", "etiketler": ["Kıskanç", "Saf", "İletişimi_Zayıf"]},
+      {"varyasyon": "Geriye Esneyen Parmaklar", "anlam": "Her ortama uyan, söz verip kendi bildiğini okuyan, esnek, kaypak.", "etiketler": ["Uyumlu", "Kaypak", "Esnek"]},
+      {"varyasyon": "Sert / Esnemeyen Parmaklar", "anlam": "Kurallarından taviz vermeyen, inatçı, dürüst ama geçimsiz.", "etiketler": ["İnatçı", "Dürüst", "Kuralcı"]}
+    ]
+  }
+}

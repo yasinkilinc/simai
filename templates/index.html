@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İlm-i Sima - Yapay Zeka Yüz Analizi</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            /* Renk Paleti (Modern, Koyu Tema) */
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #334155;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --accent: #8b5cf6;
+            --success: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.3);
+
+            /* Tipografi */
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        header {
+            background-color: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Main Container */
+        main {
+            flex: 1;
+            padding: 3rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .hero-section h1 {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-section p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* App Layout */
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 900px) {
+            .app-grid {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+
+        /* Upload Card */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 3rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            background-color: rgba(51, 65, 85, 0.3);
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: var(--primary);
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-text {
+            font-weight: 500;
+        }
+
+        .upload-subtext {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        /* Preview Image */
+        .preview-container {
+            display: none;
+            margin-top: 1.5rem;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        #image-preview {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            object-fit: cover;
+            max-height: 400px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: var(--bg-input);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Results Area */
+        .results-area {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .placeholder-results {
+            height: 100%;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .placeholder-icon {
+            font-size: 4rem;
+            opacity: 0.2;
+            margin-bottom: 1rem;
+        }
+
+        /* Loading Spinner */
+        .loader {
+            display: none;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Results Overview */
+        .results-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .header-result {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .shape-badge {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid var(--primary);
+            color: var(--text-main);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-family: var(--font-display);
+            text-align: center;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .shape-badge .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.2rem;
+        }
+
+        .shape-badge .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Traits Grid */
+        .traits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .trait-box {
+            background: rgba(51, 65, 85, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--border-color);
+        }
+
+        .trait-box.positive {
+            border-left-color: var(--success);
+        }
+
+        .trait-box.negative {
+            border-left-color: #ef4444;
+        }
+
+        .trait-box.neutral {
+            border-left-color: var(--primary);
+        }
+
+        .trait-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .trait-list {
+            list-style: none;
+        }
+
+        .trait-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        .trait-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--text-muted);
+        }
+
+        /* Result Image layout */
+        .result-image-wrapper {
+            margin-top: 2rem;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: #000;
+        }
+
+        .result-image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            font-weight: 500;
+        }
+
+        .alert.error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Camera Modal -->
+    <div id="camera-modal"
+        style="display:none; position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; flex-direction: column; align-items: center; justify-content: center;">
+        <div
+            style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px; max-width: 90%; width: 500px; text-align: center; border: 1px solid var(--border-color);">
+            <h3 style="margin-bottom: 1rem; font-family: var(--font-display);">Kameradan Fotoğraf Çek</h3>
+            <video id="camera-video" autoplay playsinline
+                style="width: 100%; border-radius: 8px; background: #000; margin-bottom: 1rem; transform: scaleX(-1);"></video>
+            <canvas id="camera-canvas" style="display:none;"></canvas>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button id="capture-btn" class="btn"><i class="fa-solid fa-camera"></i> Çek</button>
+                <button id="close-camera-btn" class="btn" style="background: #ef4444;">İptal</button>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-face-viewfinder"></i> İlm-i Sima
+        </div>
+        <div class="nav-links">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Yapay Zeka Destekli Yüz Karakter Analizi</span>
+        </div>
+    </header>
+
+    <main>
+        <div class="hero-section">
+            <h1>Yüzünüzdeki Potansiyeli Keşfedin</h1>
+            <p>Gelişmiş 3D yüz tanıma algoritması ile yüz hatlarınızı analiz ederek karakteriniz, yetenekleriniz ve
+                eğilimleriniz hakkında derinlemesine bir rapor sunar.</p>
+        </div>
+
+        <div class="app-grid">
+            <!-- Left Side: Upload -->
+            <div class="upload-panel">
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem; font-family: var(--font-display);">Yeni Analiz</h3>
+
+                    <div id="error-alert" class="alert error"></div>
+
+                    <div class="upload-area" id="drop-zone">
+                        <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                        <div class="upload-text">Fotoğraf Yükle veya Sürükle</div>
+                        <div class="upload-subtext">JPEG, PNG (Max 16MB)</div>
+                        <input type="file" id="file-input" accept="image/jpeg, image/png, image/jpg">
+                    </div>
+
+                    <button id="open-camera-btn" class="btn"
+                        style="background: var(--bg-input); color: var(--text-main); margin-bottom: 1.5rem;">
+                        <i class="fa-solid fa-camera"></i> Kamerayı Aç
+                    </button>
+
+                    <div class="preview-container" id="preview-container">
+                        <img id="image-preview" src="" alt="Önizleme">
+                    </div>
+
+                    <button id="analyze-btn" class="btn" disabled style="margin-top: 1.5rem;">
+                        <span id="btn-text">Analizi Başlat</span>
+                        <div id="btn-loader" class="loader"></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Side: Results -->
+            <div class="results-area">
+                <div id="placeholder-results" class="placeholder-results">
+                    <i class="fa-solid fa-fingerprint placeholder-icon"></i>
+                    <h2>Analiz Sonuçları Burada Görünecek</h2>
+                    <p style="margin-top: 0.5rem; max-width: 400px;">Sisteme bir fotoğraf yüklediğinizde, 400'den fazla
+                        referans noktası ile yüz şekliniz taranacak ve detaylı bir fizyonomi raporu oluşturulacaktır.
+                    </p>
+                </div>
+
+                <div id="results-content" class="results-content">
+                    <div class="card">
+                        <div class="header-result">
+                            <div class="shape-badge">
+                                <div class="label">YÜZ ŞEKLİ</div>
+                                <div id="res-face-shape" class="value">Oval</div>
+                            </div>
+                            <div style="flex: 1;">
+                                <h2 style="font-family: var(--font-display); margin-bottom: 0.5rem;">Fizyonomi Raporu
+                                </h2>
+                                <p style="color: var(--text-muted);">Yüz hatlarınızın 3D tarama ve derin öğrenme ile
+                                    çözümlenmiş karakteristik özellikleri.</p>
+                            </div>
+                        </div>
+
+                        <div id="cross-validation-alert" class="alert error"
+                            style="display:none; background-color: rgba(245, 158, 11, 0.1); border-color: #f59e0b; color: #f59e0b; margin-bottom: 2rem;">
+                            <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-bolt"></i> Kesinleşmiş Karakter Analizi (Çapraz Doğrulama)
+                            </h3>
+                            <ul id="res-cross-validated" style="margin-left: 1.5rem; line-height: 1.8;"></ul>
+                        </div>
+
+                        <div class="traits-grid">
+                            <!-- Olumlu Özellikler -->
+                            <div class="trait-box positive">
+                                <div class="trait-header">
+                                    <i class="fa-solid fa-circle-check" style="color: var(--success);"></i> Olumlu
+                                    Eğilimler
+                                </div>
+                                <ul id="res-positive" class="trait-list">
+                                </ul>
+                            </div>
+
+                            <!-- Olumsuz / Gelişim Alanları -->
+                            <div class="trait-box negative">
+                                <div class="trait-header">
+                                    <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i> Gelişim
+                                    Alanları
+                                </div>
+                                <ul id="res-negative" class="trait-list">
+                                </ul>
+                            </div>
+
+                            <!-- Nötr / Diğer -->
+                            <div class="trait-box neutral">
+                                <div class="trait-header">
+                                    <i class="fa-solid fa-circle-info" style="color: var(--primary);"></i> Diğer
+                                    Özellikler
+                                </div>
+                                <ul id="res-neutral" class="trait-list">
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="result-image-wrapper">
+                            <h3
+                                style="padding: 1rem 1.5rem; background: var(--bg-dark); font-family:var(--font-display); border-bottom:1px solid var(--border-color);">
+                                3D Mesh ve Analiz Noktaları</h3>
+                            <img id="res-annotated-image" src="" alt="Analiz Görseli">
+                        </div>
+
+                        <!-- Feedback Form -->
+                        <div class="feedback-section"
+                            style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-dark); border-radius: 12px; border: 1px solid var(--border-color);">
+                            <h3 style="margin-bottom: 1rem; font-family: var(--font-display);">Analiz Ne Kadar Doğruydu?
+                            </h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Geri
+                                bildiriminiz AI modelinin gelişmesine katkı sağlar.</p>
+                            <div id="feedback-stars"
+                                style="color: var(--text-muted); font-size: 1.5rem; cursor: pointer; margin-bottom: 1rem; display: flex; gap: 0.5rem;">
+                                <i class="fa-regular fa-star star-btn" data-rating="1"></i>
+                                <i class="fa-regular fa-star star-btn" data-rating="2"></i>
+                                <i class="fa-regular fa-star star-btn" data-rating="3"></i>
+                                <i class="fa-regular fa-star star-btn" data-rating="4"></i>
+                                <i class="fa-regular fa-star star-btn" data-rating="5"></i>
+                            </div>
+                            <textarea id="feedback-comment" placeholder="Varsa eklemek istedikleriniz..." rows="3"
+                                style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: white; outline: none; margin-bottom: 1rem; font-family: var(--font-body); resize: vertical;"></textarea>
+                            <button id="submit-feedback-btn" class="btn" style="width: auto;">Gönder</button>
+                            <div id="feedback-success" style="display:none; color: var(--success); margin-top: 0.5rem;">
+                                <i class="fa-solid fa-check"></i> Geri bildiriminiz sisteme kaydedildi. Teşekkürler!
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 İlm-i Sima - Tüm hakları saklıdır. Bu uygulama sadece eğlence ve kişisel gelişim amaçlıdır.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('file-input');
+            const previewContainer = document.getElementById('preview-container');
+            const imagePreview = document.getElementById('image-preview');
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnLoader = document.getElementById('btn-loader');
+            const errorAlert = document.getElementById('error-alert');
+
+            const placeholderResults = document.getElementById('placeholder-results');
+            const resultsContent = document.getElementById('results-content');
+
+            // Camera elements
+            const openCameraBtn = document.getElementById('open-camera-btn');
+            const cameraModal = document.getElementById('camera-modal');
+            const cameraVideo = document.getElementById('camera-video');
+            const cameraCanvas = document.getElementById('camera-canvas');
+            const captureBtn = document.getElementById('capture-btn');
+            const closeCameraBtn = document.getElementById('close-camera-btn');
+
+            let currentStream = null;
+
+            let currentFile = null;
+            let currentPhotoId = null; // for feedback
+
+            // Feedback elements
+            const stars = document.querySelectorAll('.star-btn');
+            const feedbackComment = document.getElementById('feedback-comment');
+            const submitFeedbackBtn = document.getElementById('submit-feedback-btn');
+            const feedbackSuccess = document.getElementById('feedback-success');
+            let currentRating = 0;
+
+            // Drag & Drop Events
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+            });
+
+            dropZone.addEventListener('drop', handleDrop, false);
+            dropZone.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileSelect);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files.length > 0) processFile(files[0]);
+            }
+
+            function handleFileSelect(e) {
+                if (e.target.files.length > 0) processFile(e.target.files[0]);
+            }
+
+            function processFile(file) {
+                errorAlert.style.display = 'none';
+
+                if (!file.type.match('image.*')) {
+                    showError("Lütfen geçerli bir resim dosyası (JPEG, PNG) yükleyin.");
+                    return;
+                }
+
+                if (file.size > 16 * 1024 * 1024) {
+                    showError("Dosya boyutu 16MB'dan küçük olmalıdır.");
+                    return;
+                }
+
+                currentFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    dropZone.style.display = 'none';
+                    analyzeBtn.disabled = false;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function showError(msg) {
+                errorAlert.textContent = msg;
+                errorAlert.style.display = 'block';
+            }
+
+            // Provide a way to click preview to choose another image
+            imagePreview.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Camera Functions
+            openCameraBtn.addEventListener('click', async () => {
+                try {
+                    currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                    cameraVideo.srcObject = currentStream;
+                    cameraModal.style.display = 'flex';
+                } catch (err) {
+                    showError("Kameraya erişilemedi: " + err.message);
+                }
+            });
+
+            function stopCamera() {
+                if (currentStream) {
+                    currentStream.getTracks().forEach(track => track.stop());
+                }
+                cameraModal.style.display = 'none';
+            }
+
+            closeCameraBtn.addEventListener('click', stopCamera);
+
+            captureBtn.addEventListener('click', () => {
+                if (!currentStream) return;
+
+                // Draw current frame to canvas
+                cameraCanvas.width = cameraVideo.videoWidth;
+                cameraCanvas.height = cameraVideo.videoHeight;
+                const ctx = cameraCanvas.getContext('2d');
+                // Mirror mapping
+                ctx.translate(cameraCanvas.width, 0);
+                ctx.scale(-1, 1);
+                ctx.drawImage(cameraVideo, 0, 0, cameraCanvas.width, cameraCanvas.height);
+
+                // Convert to blob (file)
+                cameraCanvas.toBlob((blob) => {
+                    const file = new File([blob], "webcam_capture.jpg", { type: "image/jpeg" });
+                    processFile(file);
+                    stopCamera();
+                }, 'image/jpeg', 0.95);
+            });
+
+            analyzeBtn.addEventListener('click', async () => {
+                if (!currentFile) return;
+
+                // UI Loading state
+                analyzeBtn.disabled = true;
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'block';
+                errorAlert.style.display = 'none';
+
+                const formData = new FormData();
+                formData.append('image', currentFile);
+
+                try {
+                    const response = await fetch('/api/analyze', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Tarama sırasında bir hata oluştu');
+                    }
+
+                    if (data.success) {
+                        displayResults(data);
+                    } else {
+                        throw new Error(data.error || 'Analiz başarısız');
+                    }
+
+                } catch (error) {
+                    showError(error.message);
+                } finally {
+                    analyzeBtn.disabled = false;
+                    btnText.style.display = 'block';
+                    btnLoader.style.display = 'none';
+                }
+            });
+
+            function populateList(elementId, items) {
+                const ul = document.getElementById(elementId);
+                ul.innerHTML = '';
+                if (!items || items.length === 0) {
+                    ul.innerHTML = '<li>Belirgin bir özellik tespit edilmedi.</li>';
+                    return;
+                }
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    if (typeof item === 'object' && item !== null) {
+                        li.innerHTML = `<strong>${item.trait}</strong>: ${item.description ? item.description : ''}`;
+                    } else {
+                        li.textContent = item;
+                    }
+                    ul.appendChild(li);
+                });
+            }
+
+            function displayResults(data) {
+                placeholderResults.style.display = 'none';
+                resultsContent.style.display = 'block';
+
+                document.getElementById('res-face-shape').textContent = data.report.face_shape || 'Bilinmiyor';
+
+                // Çapraz Doğrulanmış (Map-Reduce) Verileri
+                const crossValidated = data.report.cross_validated_traits || [];
+                const crossAlert = document.getElementById('cross-validation-alert');
+                const crossUl = document.getElementById('res-cross-validated');
+
+                if (crossValidated.length > 0) {
+                    crossUl.innerHTML = '';
+                    crossValidated.forEach(cv => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `Sistemimiz bu kişide <strong>${cv.count}</strong> farklı organda <strong>${cv.trait}</strong> alameti tespit etmiştir. İlm-i Sima kurallarına göre bu çapraz doğrulanmış (kesin) bir karakter özelliğidir.`;
+                        crossUl.appendChild(li);
+                    });
+                    crossAlert.style.display = 'block';
+                } else {
+                    crossAlert.style.display = 'none';
+                }
+
+                const analysis = data.report.analysis || {};
+                populateList('res-positive', analysis.positive);
+                populateList('res-negative', analysis.negative);
+                populateList('res-neutral', analysis.neutral);
+
+                const resultImg = document.getElementById('res-annotated-image');
+                resultImg.src = data.result_image + '?t=' + new Date().getTime(); // Cache busting
+
+                currentPhotoId = data.photo_id; // Set photo ID for feedback form
+                // Reset feedback form
+                currentRating = 0;
+                stars.forEach(s => {
+                    s.classList.remove('fa-solid');
+                    s.classList.add('fa-regular');
+                    s.style.color = 'var(--text-muted)';
+                });
+                feedbackComment.value = "";
+                feedbackSuccess.style.display = 'none';
+                submitFeedbackBtn.disabled = false;
+
+                // Kaydırma (Scroll)
+                if (window.innerWidth < 900) {
+                    resultsContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            // Feedback Logic
+            stars.forEach(star => {
+                star.addEventListener('click', (e) => {
+                    const rating = parseInt(e.target.dataset.rating);
+                    currentRating = rating;
+                    stars.forEach(s => {
+                        if (parseInt(s.dataset.rating) <= rating) {
+                            s.classList.remove('fa-regular');
+                            s.classList.add('fa-solid');
+                            s.style.color = '#f59e0b'; // Gold color active
+                        } else {
+                            s.classList.remove('fa-solid');
+                            s.classList.add('fa-regular');
+                            s.style.color = 'var(--text-muted)';
+                        }
+                    });
+                });
+            });
+
+            submitFeedbackBtn.addEventListener('click', async () => {
+                if (!currentPhotoId) return;
+                if (currentRating === 0) {
+                    alert("Lütfen bir yıldız puanı verin.");
+                    return;
+                }
+
+                submitFeedbackBtn.disabled = true;
+                submitFeedbackBtn.textContent = 'Gönderiliyor...';
+
+                try {
+                    const response = await fetch('/api/feedback', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            photo_id: currentPhotoId,
+                            trait: 'General Analysis',
+                            rating: currentRating,
+                            comment: feedbackComment.value
+                        })
+                    });
+
+                    if (response.ok) {
+                        feedbackSuccess.style.display = 'block';
+                        submitFeedbackBtn.style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error('Feedback error:', error);
+                    alert("Geri bildirim gönderilirken hata oluştu.");
+                    submitFeedbackBtn.disabled = false;
+                } finally {
+                    submitFeedbackBtn.textContent = 'Gönder';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

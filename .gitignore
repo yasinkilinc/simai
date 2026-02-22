@@ -1,0 +1,51 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.env
+
+# MacOS files
+.DS_Store
+
+# IDE files
+.vscode/
+.idea/
+
+# Application specific (Media, SQLite databases, etc.)
+archive/photos/*
+!archive/photos/.gitkeep
+archive/results/*
+!archive/results/.gitkeep
+archive/database.db
+archive/*.db
+
+# Temporary images
+yasin.jpeg
+analysis_result.jpg
+*.jpg
+*.png
+!static/**/*.png
+!static/**/*.jpg
+!static/**/*.jpeg
+!dataset/raw/**/*.jpg
+!dataset/processed/**/*.jpg
+
+# Temporary backups
+*~
+*.bak
+
+# Logs
+logs/
+*.log
+
+# Large directories
+models/
+dataset/
+videolar/
+venv/
+.venv/
+db/

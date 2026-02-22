@@ -1,0 +1,390 @@
+{
+  "ilmi_sima_kutuphanesi": {
+    "beden_ve_boy_orantilari": [
+      {
+        "ozellik": "Bacak Boyu Uzun",
+        "anlam": "Uysal, çabuk yönetilir, duru ve temiz düşünür, safi niyetlidir. Kurnazlık bilmez.",
+        "detay": "Vücut alt kısmı 4.5 - 5 kafa boyundan uzunsa."
+      },
+      {
+        "ozellik": "Bacak Boyu Kısa",
+        "anlam": "Detaycı, hırslı, kibirli, olaylara bireysel bakan, yönetici ruhlu ve bencildir.",
+        "detay": "Kısa boylular zayıfsa aşırı detaycı ve manipülatif olabilir."
+      },
+      {
+        "ozellik": "Uzun Boy",
+        "anlam": "Olaylara bütünsel bakar, safi, berrak ve temiz niyetlidir. Büyük resmi görür."
+      }
+    ],
+    "yuz_sekilleri": [
+      {
+        "ozellik": "Kare Yüz",
+        "anlam": "İnsan eğitmeni, kararlı, çalışkan, mücadeleci, güvenilir, detaycı, inatçı, garantici ve ümmetçi/aileci yapıdadır.",
+        "detay": "İyi olduklarında mükemmel bir rehber, kötü olduklarında ise çok tehlikeli olurlar. Empati yetenekleri yüksektir."
+      },
+      {
+        "ozellik": "Dikdörtgen Yüz",
+        "anlam": "Doğuştan yönetici ve lider. Baskıya dayanıklı, otoriter, kuralcı, sistemli ve empati yoksundur.",
+        "detay": "Yönetilmeyi sevmezler, kendi bildiklerini okurlar. İkili ilişkilerde vefasız veya çok sert kurallı olabilirler."
+      },
+      {
+        "ozellik": "Minyon Dikdörtgen",
+        "anlam": "Dikdörtgen yüzün tüm özelliklerini iki katı (çarpı 2) şiddetinde yaşarlar.",
+        "detay": "Boyu 1.65 altı ve dikdörtgen yüzlü kişilerdir (Örn: Hz. Ali, Atatürk)."
+      },
+      {
+        "ozellik": "Üçgen Yüz (Ters Üçgen)",
+        "anlam": "Mucit, kaşif, fikir üreten, inovatif, kurnaz, zeki ve entelektüeldir. Özgürlüğüne çok düşkündür.",
+        "detay": "Sıkılgan yapıları vardır, çabuk küser veya insan seçerler. Baskıya asla gelemezler."
+      },
+      {
+        "ozellik": "Oval Yüz",
+        "anlam": "Tasarım, dizayn, estetik ve barış elçisidir. Aşırı duygusal, merhametli, naif ve diplomatiktir.",
+        "detay": "İradeleri zayıf olabilir, melankoliye yatkındırlar. İyisi çok iyi (melek gibi), kötüsü ise en tehlikeli manipülatördür."
+      },
+      {
+        "ozellik": "Yuvarlak Yüz",
+        "anlam": "Hayatın neşesi, sosyal, şakacı, ehlikeyif, romantik ve uyumludur.",
+        "detay": "Fazla iyimser (pollyannacı) olabilirler. Elmacık kemikleri belirgin olduğu için aynı zamanda çok güçlü ve dirayetlidirler."
+      },
+      {
+        "ozellik": "Şanslı Yüz (Yayvan Alın)",
+        "anlam": "Spesifik bir yeteneği olmasa bile fırsatlar ayağına gelir. Nasipli insanlardır.",
+        "detay": "Alın yanlara doğru çok açık ve yayvandır."
+      }
+    ],
+    "kafa_yapilari": [
+      {
+        "ozellik": "Büyük Kafa",
+        "anlam": "Organizatör, geniş görüşlü, stres ve kriz ortamlarını iyi yöneten lider profili."
+      },
+      {
+        "ozellik": "Küçük Kafa",
+        "anlam": "Küçük hesaplar yapan, dar bakış açılı, kuru inatçı, bağımlı/empat karakter."
+      },
+      {
+        "ozellik": "Tepesi Takıntılı Kafa (Pointy/Sivri)",
+        "anlam": "Uzun vadeli hedefleri olan, kibirli, sır küpü, başkalarının zaaflarını çok iyi sezen ve içten pazarlıklı kişi.",
+        "detay": "Kafanın arka üst kısmı ok gibi sivridir."
+      },
+      {
+        "ozellik": "Yumurta Kafa",
+        "anlam": "Aşırı zeki, içe dönük, sinsi, strateji insanı ve sır küpüdür. Gerçek planlarını asla söylemez."
+      },
+      {
+        "ozellik": "Kare Kafa (Küp Şeker)",
+        "anlam": "İdeal yönetici, iş adamı. Disiplinli, dakik, mükemmeliyetçi ve güven verir."
+      },
+      {
+        "ozellik": "Dar Kafa",
+        "anlam": "Özgüveni eksik, zayıf iradeli, kontrol edilme ihtiyacı duyan ve başkalarından sürekli akıl alan kişi."
+      }
+    ],
+    "alin_ve_sac_cizgisi": [
+      {
+        "ozellik": "Geniş ve Yüksek Alın",
+        "anlam": "Vizyoner, ideal lider, analitik düşünen ve iradesi çok güçlü."
+      },
+      {
+        "ozellik": "Dar ve Kısa Alın",
+        "anlam": "Pratik, sonuç odaklı, görev insanı. Dar bakış açısına sahip ve iradesi zayıf. Düşünmeden (patavatsızca) konuşabilir."
+      },
+      {
+        "ozellik": "Dik Alın (Yandan bakıldığında)",
+        "anlam": "Dik başlı, inatçı, sözünü esirgemeyen ve kılıç gibi keskin mizaçlı."
+      },
+      {
+        "ozellik": "Geriye Yatık Alın",
+        "anlam": "İletişim becerisi ve diplomasi yeteneği çok yüksektir."
+      },
+      {
+        "ozellik": "M Tipi Saç Çizgisi",
+        "anlam": "Empatik, ince düşünen, aileci ve güçlü fikirleri olan karakter."
+      },
+      {
+        "ozellik": "Dul Zirvesi (V Tipi Saç Çizgisi)",
+        "anlam": "Aşırı empatik, mükemmeliyetçi, üretken zekalı fakat tartışmacı."
+      },
+      {
+        "ozellik": "Düzensiz/Asimetrik Saç Çizgisi",
+        "anlam": "Dengesiz düşünce yapısı, manipülatif, tutarsız (bir gün dost, bir gün düşman)."
+      },
+      {
+        "ozellik": "Saçla Alnı Kapatmak",
+        "anlam": "İçe kapanıklık, özgüven eksikliği, kendini ifade etmekten kaçınma, saklanan sırlar."
+      }
+    ],
+    "kas_yapisi": [
+      {
+        "ozellik": "Kalın ve Gür Kaş",
+        "anlam": "Yüksek yaşam enerjisi, mücadeleci ruh, zorlu sınavlardan geçme ve yüksek libido (testosteron/östrojen)."
+      },
+      {
+        "ozellik": "İnce ve Seyrek Kaş",
+        "anlam": "Düşük fiziksel enerji, hassasiyet. Çok ince düşünen ve fitnebaz/kurnaz olmaya yatkın yapı."
+      },
+      {
+        "ozellik": "Kısa Kaş",
+        "anlam": "Vicdan ve merhamet yoksunluğu, acımasızlık (Örn: Diktatör kaşı)."
+      },
+      {
+        "ozellik": "Uzun Kaş",
+        "anlam": "Uzun ömür, iyi ahlak, geniş sosyal çevre, manevi olgunluk."
+      },
+      {
+        "ozellik": "Birleşik Kaş (Tek Kaş)",
+        "anlam": "Sabit fikirli, yeniliğe kapalı, kendi doğrusunu dayatan fakat ailesine aşırı düşkün/korumacı."
+      },
+      {
+        "ozellik": "İki Kaş Arası Geniş",
+        "anlam": "Geniş bakış açısı, hoşgörü, yeniliğe açık olma ve zenginlik potansiyeli."
+      },
+      {
+        "ozellik": "Göze Yakın Kaş",
+        "anlam": "Sabırsız, tez canlı, hırslı, aceleci, dakik."
+      },
+      {
+        "ozellik": "Hilal Kaş (Kavisli)",
+        "anlam": "Merhametli, uyumlu, bütüncül bakış açısına sahip, en ideal/dengeli kaş tipi."
+      },
+      {
+        "ozellik": "Dış Uçları Aşağı Sarkan Kaş",
+        "anlam": "Gözlemci, tefekkür eden, maneviyata ve derin düşünceye dalan (Alim/Evliya kaşı)."
+      }
+    ],
+    "goz_yapisi": [
+      {
+        "ozellik": "Büyük ve Parlak Göz",
+        "anlam": "Dışa dönük, duygusal, saf/masum niyetli, hafif ürkek."
+      },
+      {
+        "ozellik": "Küçük ve Kısık Göz (Avcı Göz)",
+        "anlam": "İçe kapanık, kurnaz, cesur, karşıdakinin zaafını arayan, pintiliğe yatkın."
+      },
+      {
+        "ozellik": "Çukur Göz",
+        "anlam": "Derin gözlem yeteneği, ketum, arka planda gizli planlar yapan, kirli çıkı."
+      },
+      {
+        "ozellik": "Dış Kantus (Göz Kenarı) Aşağı Eğik",
+        "anlam": "Kindar, yapılanı asla unutmayan, intikamcı veya bu duyguyla mücadele eden kişi."
+      },
+      {
+        "ozellik": "İç Kantus (Pınarı) Aşağı Eğik",
+        "anlam": "Sivri dilli, acımasızca laf sokan, çok zeki ve kırıcı."
+      },
+      {
+        "ozellik": "Göz Kapağı Düşük",
+        "anlam": "Çok fazla eleştiriye maruz kalmış, savunmacı, araştırmacı, bastırılmış öfke sahibi."
+      },
+      {
+        "ozellik": "Göz Akının Alttan/Üstten Görünmesi",
+        "anlam": "Psikopatlık alameti, tehlikeli öfke patlamaları, gözü dönme potansiyeli."
+      }
+    ],
+    "burun_yapisi": [
+      {
+        "ozellik": "Kemerli Burun",
+        "anlam": "Gayret, mücadele, başkasına muhtaç olmama, onurlu, gururlu ve stratejik."
+      },
+      {
+        "ozellik": "Büyük ve Uzun Burun",
+        "anlam": "Hırs, güç, konfora/yemeğe düşkünlük, tembellik potansiyeli."
+      },
+      {
+        "ozellik": "İnce Burun",
+        "anlam": "İnce ruhlu, hassas, kırılgan, alıngan, tek başına çalışmayı seven."
+      },
+      {
+        "ozellik": "Gaga Burun (Aşağı Düşük)",
+        "anlam": "Aşırı kurnazlık, sivri dillilik, başkalarını kullanan/kandıran yapı."
+      },
+      {
+        "ozellik": "Top/Yuvarlak Uçlu Burun",
+        "anlam": "Para/duygu biriktirme huyu, eğlenceli, mizah yeteneği yüksek, yemeğe düşkün."
+      },
+      {
+        "ozellik": "Burun Ucu Kalkık",
+        "anlam": "Cömert, meraklı, elinde para tutamayan."
+      },
+      {
+        "ozellik": "Burun Delikleri Karşıdan Görünen",
+        "anlam": "Narsisizm belirtisi, kendini öncelleyen, bencil, kibirli."
+      },
+      {
+        "ozellik": "Geniş Burun Delikleri",
+        "anlam": "Öfke kontrol problemi, çabuk sinirlenen, aynı zamanda cömert."
+      },
+      {
+        "ozellik": "Alından (Düz) Başlayan Burun",
+        "anlam": "Sınır tanımayan, şehevi ve dünyevi arzularına aşırı düşkün, çapkınlık alameti."
+      },
+      {
+        "ozellik": "Burun Ucunda Çizgi/Gamze",
+        "anlam": "Çizgi melankoliyi; Gamze ise çapkınlığı, sevgi açlığını ve ahlaki zafiyeti simgeler."
+      }
+    ],
+    "yanak_ve_elmacik_kemigi": [
+      {
+        "ozellik": "Elmacık Kemiği Yüksek ve Belirgin",
+        "anlam": "Otorite, liderlik, hırs, yüksek özgüven, inatçılık ve mücadele ruhu."
+      },
+      {
+        "ozellik": "Elmacık Kemiği Göze Çok Yakın",
+        "anlam": "Kindarlık, hainlik, tehlikeli derecede takıntılı takipçilik."
+      },
+      {
+        "ozellik": "Dolgun ve Yuvarlak Yanaklar",
+        "anlam": "Aile sevgisi görmüş, güvenilir, adil, sevgi dolu, yüksek enerjili."
+      },
+      {
+        "ozellik": "Fil Yanağı (Aşağı Sarkık)",
+        "anlam": "Mükemmel hafıza (kin veya iyiliği asla unutmaz), bilgi ve duygu biriktirici."
+      },
+      {
+        "ozellik": "Çökük Yanaklar",
+        "anlam": "Düşük enerji, güvensizlik, sevgi yoksunluğu. İleri derecede ise vicdansızlık."
+      }
+    ],
+    "filtrum_dudak_ve_agiz": [
+      {
+        "ozellik": "Derin, Net ve Belirgin Filtrum",
+        "anlam": "Yüksek başarı, üretken zeka, yüksek yaşam kalitesi, sağlıklı üreme sistemi."
+      },
+      {
+        "ozellik": "Genişleyen Filtrum (Aşağı Doğru)",
+        "anlam": "Sonradan gelen başarı, artan zenginlik, açılan nasip."
+      },
+      {
+        "ozellik": "Düz/Silik Filtrum",
+        "anlam": "Düşük yaşam enerjisi, sağlık (rahim/genital) problemleri, tembellik."
+      },
+      {
+        "ozellik": "Büyük Ağız",
+        "anlam": "Konuşkan, dışa dönük, cömert, sosyal."
+      },
+      {
+        "ozellik": "Asimetrik Ağız (Konuşurken yamulan)",
+        "anlam": "Çok iyi yalan söyleyen, manipülatif, gizli narsist, güvenilmez."
+      },
+      {
+        "ozellik": "İnce Üst Dudak",
+        "anlam": "Ketum, sır tutan, eleştiriye kapalı, bencil, hesap soran (İstihbaratçı dudağı)."
+      },
+      {
+        "ozellik": "Kalın Alt Dudak",
+        "anlam": "Güçlü hitabet, ikna kabiliyeti, abartı/mübalağa yapma, dedikodu eğilimi."
+      },
+      {
+        "ozellik": "Ön İki Diş Arası Boşluk (Ayrık)",
+        "anlam": "Medeni cesaret, lafını esirgemeyen, risk alan, israf (para tutamama)."
+      }
+    ],
+    "cene_ve_boyun": [
+      {
+        "ozellik": "Geniş, Güçlü ve Köşeli Çene",
+        "anlam": "Çok güçlü irade, dayanıklılık, liderlik, geri adım atmayan savaşçı yapı."
+      },
+      {
+        "ozellik": "Sivri Çene",
+        "anlam": "Aşırı detaycı, mükemmeliyetçi, kurnaz ve eleştirel."
+      },
+      {
+        "ozellik": "Geriye Çekik (Zayıf) Çene",
+        "anlam": "Zayıf irade, pasif, kararsız, mücadeleden kaçan yapı."
+      },
+      {
+        "ozellik": "Kısa Boyun",
+        "anlam": "Kontrolcü, inatçı, dürtüsel hareket eden, nefsine/dünyaya düşkün."
+      },
+      {
+        "ozellik": "Uzun Boyun",
+        "anlam": "Kibirli (tepeden bakan), zarif, hırslı, saflığa yatkın."
+      },
+      {
+        "ozellik": "Adem Elması Belirgin",
+        "anlam": "Mücadeleci, girişken, hayatın zorluklarına direnen."
+      }
+    ],
+    "kulak_yapisi": [
+      {
+        "ozellik": "Büyük Kulak",
+        "anlam": "Uzun ömür, dayanıklılık, uzun vadeli hedefler, zenginlik potansiyeli."
+      },
+      {
+        "ozellik": "Kepçe Kulak",
+        "anlam": "İnatçı, sosyal, isyankar, dışa dönük, baskıya gelemeyen."
+      },
+      {
+        "ozellik": "Geriye Yatık Kulak",
+        "anlam": "Uyumlu, asosyal, iç dünyasında yaşayan, ofis çalışmasına uygun."
+      },
+      {
+        "ozellik": "Ayrık ve Dolgun Kulak Memesi",
+        "anlam": "Özgürlüğüne düşkün, bağımsız, liderlik vasfı olan."
+      },
+      {
+        "ozellik": "Yapışık Kulak Memesi",
+        "anlam": "Bağımlı (anneye/babaya), yönetilmeye müsait, rol yapma/oyunculuk yeteneği."
+      },
+      {
+        "ozellik": "Sivri Kulak (Spock Kulağı)",
+        "anlam": "Ekstra zeki, kurnaz, laf ebesi, hazırcevap."
+      }
+    ],
+    "eller_ve_parmaklar": [
+      {
+        "ozellik": "Temel El (Kısa Parmak, Kaba/Şişkin Avuç)",
+        "anlam": "Usta elleri. Dürtüsel, kaba güç kullanan, fiziksel şiddete meyilli, emir alarak çalışan ama işten kaçmak için manipülatif mazeretler üreten."
+      },
+      {
+        "ozellik": "Kare El",
+        "anlam": "Düzenli, disiplinli, pratik, güvenilir. Gerçekçi, gelenekselci, mühendis/hukukçu profili."
+      },
+      {
+        "ozellik": "Spatula El (Uçlara doğru genişleyen)",
+        "anlam": "Devrimci, idealist, aşırı enerjik, mucit, yerinde duramayan, diktatörlüğe yatkın."
+      },
+      {
+        "ozellik": "Konik El (İnce, Zarif, Yumuşak)",
+        "anlam": "Sanatkar, duygusal, romantik, sezgisel. Mantıktan çok ilhamla hareket eden, tembelliğe yatkın."
+      },
+      {
+        "ozellik": "Filozofik El (Uzun, Kemikli, Düğümlü)",
+        "anlam": "Derin analitik düşünen, şüpheci, detaycı, geçimsiz, paradan çok bilgiye önem veren."
+      },
+      {
+        "ozellik": "Psişik / Medyumik El (Kalem gibi ince sivri)",
+        "anlam": "Metafizik aleme açık, aşırı sezgisel, fiziksel dünyadan kopuk, pratik işlerde başarısız, şifacı."
+      },
+      {
+        "ozellik": "Uzun İşaret Parmağı (Jüpiter)",
+        "anlam": "Doğuştan lider, hırslı, diktatörlüğe ve narsisizme yatkın."
+      },
+      {
+        "ozellik": "Uzun Yüzük Parmağı (Güneş)",
+        "anlam": "Şöhret tutkusu, risk almayı seven, kumarbazlığa meyil, yüksek estetik anlayışı."
+      },
+      {
+        "ozellik": "Uzun Serçe Parmak (Merkür)",
+        "anlam": "Mükemmel iletişimci, ikna dehası, ticari zeka. Çok uzunsa manipülatif ve yalan makinesi."
+      },
+      {
+        "ozellik": "Kısa Serçe Parmak",
+        "anlam": "İletişim güçlüğü, yetersizlik hissi, aşırı kıskançlık, saflık/kolay kandırılma."
+      },
+      {
+        "ozellik": "Uzun ve Güçlü Başparmak",
+        "anlam": "Çok güçlü irade, motor gücü. Tasarlayarak (kurgulayarak) hareket eden lider."
+      },
+      {
+        "ozellik": "Geriye Esnemeyen (Katı) Parmaklar",
+        "anlam": "İnatçı, kuralcı, sözünden dönmeyen, dürüst ama uyumsuz."
+      },
+      {
+        "ozellik": "Geriye Esneyen (Lastik gibi) Parmaklar",
+        "anlam": "Herkese mavi boncuk dağıtan, kaypak, esnek, uyumlu ama arkadan kendi bildiğini okuyan."
+      }
+    ]
+  }
+}
