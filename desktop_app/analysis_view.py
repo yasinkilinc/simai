@@ -1362,7 +1362,7 @@ class AnalysisView(QWidget):
             self.current_side_pixmap = None
             
         # 2. Update 3D View
-        if points_3d is not None and len(points_3d) > 0 and side_image is not None:
+        if points_3d is not None and len(points_3d) > 0:
             self.lbl_3d_warning.hide()
             self.view_3d.show()
             self.controls_3d_widget.show()
@@ -1370,41 +1370,104 @@ class AnalysisView(QWidget):
             # Clear old items
             self.view_3d.items = []
             
-            # Create scatter plot
-            pos = np.array(points_3d, dtype=np.float32)
-            
-            # Center the mesh
-            center = np.mean(pos, axis=0)
-            pos = pos - center
-            
-            # Scale for better view
-            scale = 100.0
-            pos = pos * scale
-            
-            # Color gradient based on Z depth
-            z = pos[:, 2]
-            # Normalize z for color mapping safely
-            z_diff = z.max() - z.min()
-            if z_diff > 0:
-                z_norm = (z - z.min()) / z_diff
-            else:
-                z_norm = np.zeros_like(z)
-            
-            # Create colors (blue to cyan)
-            colors = np.zeros((len(pos), 4), dtype=np.float32)
-            colors[:, 0] = 0.5  # R
-            colors[:, 1] = 0.7 + (z_norm * 0.3) # G
-            colors[:, 2] = 1.0  # B
-            colors[:, 3] = 0.8  # Alpha
-            
-            sp = gl.GLScatterPlotItem(pos=pos, color=colors, size=3, pxMode=True)
-            self.view_3d.addItem(sp)
+            try:
+                from mediapipe.python.solutions.face_mesh_connections import FACEMESH_TESSELATION
+                from collections import defaultdict
+                
+                pos = np.array(points_3d, dtype=np.float32)
+                
+                # Center the mesh
+                center = np.mean(pos, axis=0)
+                pos = pos - center
+                
+                # Scale for better view
+                scale = 300.0
+                pos = pos * scale
+                
+                # Flip Y axis to correct orientation (MediaPipe Y is inverted)
+                pos[:, 1] = -pos[:, 1]
+                
+                # Build triangles from FACEMESH_TESSELATION edges
+                adj = defaultdict(set)
+                for a, b in FACEMESH_TESSELATION:
+                    if a < len(pos) and b < len(pos):
+                        adj[a].add(b)
+                        adj[b].add(a)
+                
+                triangles = set()
+                for a in adj:
+                    for b in adj[a]:
+                        common = adj[a] & adj[b]
+                        for c in common:
+                            tri = tuple(sorted([a, b, c]))
+                            triangles.add(tri)
+                
+                faces = np.array(list(triangles), dtype=np.uint32)
+                
+                if len(faces) > 0:
+                    # Color gradient based on Z depth for a nicer look
+                    z = pos[:, 2]
+                    z_diff = z.max() - z.min()
+                    if z_diff > 0:
+                        z_norm = (z - z.min()) / z_diff
+                    else:
+                        z_norm = np.zeros_like(z)
+                    
+                    # Create per-vertex colors (metallic blue to cyan gradient)
+                    colors = np.zeros((len(pos), 4), dtype=np.float32)
+                    colors[:, 0] = 0.2 + z_norm * 0.3   # R: subtle red tint on depth
+                    colors[:, 1] = 0.5 + z_norm * 0.4   # G: green shift
+                    colors[:, 2] = 0.8 + z_norm * 0.2   # B: strong blue base
+                    colors[:, 3] = 0.85                   # Alpha
+                    
+                    mesh = gl.GLMeshItem(
+                        vertexes=pos,
+                        faces=faces,
+                        vertexColors=colors,
+                        smooth=True,
+                        drawEdges=False,
+                        drawFaces=True,
+                        shader='shaded',
+                        glOptions='translucent'
+                    )
+                    self.view_3d.addItem(mesh)
+                    
+                    # Add subtle wireframe overlay
+                    wireframe = gl.GLMeshItem(
+                        vertexes=pos,
+                        faces=faces,
+                        drawEdges=True,
+                        drawFaces=False,
+                        edgeColor=(0.4, 0.6, 0.9, 0.15),
+                        smooth=False,
+                        glOptions='translucent'
+                    )
+                    self.view_3d.addItem(wireframe)
+                else:
+                    # Fallback to scatter if triangulation fails
+                    sp = gl.GLScatterPlotItem(pos=pos, color=(0.5, 0.7, 1.0, 0.8), size=2, pxMode=True)
+                    self.view_3d.addItem(sp)
+                    
+            except Exception as e:
+                logging.error(f"3D Mesh oluşturma hatası: {e}")
+                import traceback
+                traceback.print_exc()
+                # Fallback to scatter plot
+                pos = np.array(points_3d, dtype=np.float32)
+                center = np.mean(pos, axis=0)
+                pos = (pos - center) * 300.0
+                pos[:, 1] = -pos[:, 1]
+                sp = gl.GLScatterPlotItem(pos=pos, color=(0.5, 0.7, 1.0, 0.8), size=2, pxMode=True)
+                self.view_3d.addItem(sp)
             
             # Add grid for reference
             g = gl.GLGridItem()
             g.scale(20, 20, 1)
-            g.setDepthValue(10)  # draw grid behind
+            g.setDepthValue(10)
             self.view_3d.addItem(g)
+            
+            # Set better camera angle for face viewing
+            self.view_3d.setCameraPosition(distance=250, elevation=10, azimuth=0)
         else:
             self.view_3d.hide()
             self.controls_3d_widget.hide()

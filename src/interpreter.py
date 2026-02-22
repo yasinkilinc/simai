@@ -55,63 +55,191 @@ class RuleEngine:
             "description": f"Yüz şekliniz {features.face_shape} olarak tespit edildi."
         })
 
-        # 1. Alın Yapısı
+        # =====================================================
+        # 1. ALIN YAPISI
+        # =====================================================
         alin_info = features.annotations.get('forehead', {})
         f_width = alin_info.get('width', 'Normal')
         f_height = alin_info.get('height', 'Normal')
+        f_slope = alin_info.get('slope', 'Normal')
         
-        if f_width == 'Geniş' or f_height == 'Yüksek':
+        # Geniş / Dar Alın
+        if f_width == 'Geniş':
             add_finding('alin_yapisi', "Geniş Alın (Yatayda Uzun)", 'positive')
-        elif f_width == 'Dar' or f_height == 'Kısa':
+        elif f_width == 'Dar':
             add_finding('alin_yapisi', "Dar Alın (Yatayda Kısa)", 'negative')
+        
+        # Dikey Uzun/Kısa Alın
+        if f_height == 'Yüksek':
+            add_finding('alin_yapisi', "Dikeyde Uzun Alın", 'positive')
+        elif f_height == 'Kısa':
+            add_finding('alin_yapisi', "Dikeyde Kısa Alın", 'negative')
+            
+        # Alın Eğimi (Geriye Yatık / Dik) 
+        if f_slope == 'Eğimli':
+            add_finding('alin_yapisi', "Geriye Yatık Alın", 'neutral')
+        elif f_slope == 'Yuvarlak':
+            add_finding('alin_yapisi', "Merhamet Çatısı (Kaş üstü şişkinlik)", 'positive')
 
-        # 2. Kaş Yapısı
-        e_thickness = features.metrics.get('eyebrow_thickness', 10)
-        if e_thickness < 5:
-            add_finding('kas_yapisi', "İnce ve Seyrek Kaş", 'neutral') # Kurnaz, Zihinsel
+        # =====================================================
+        # 2. KAŞ YAPISI
+        # =====================================================
+        eyebrows_info = features.annotations.get('eyebrows', {})
+        e_thickness = eyebrows_info.get('thickness', 'Normal')
+        
+        if e_thickness == 'Kalın' or e_thickness == 'Gür':
+            add_finding('kas_yapisi', "Gür ve Kalın Kaş", 'positive')
+        elif e_thickness == 'İnce' or e_thickness == 'Seyrek':
+            add_finding('kas_yapisi', "İnce ve Seyrek Kaş", 'neutral')
+        
+        # Kaş-göz mesafesi (metrics'ten)
+        eyebrow_arch = features.metrics.get('eyebrow_arch', 0)
+        if eyebrow_arch > 0.015:
+            add_finding('kas_yapisi', "Gözden Uzak Kaş", 'positive')  # Sabırlı
+        elif eyebrow_arch < -0.005:
+            add_finding('kas_yapisi', "Göze Yakın Kaş", 'neutral')  # Sabırsız
 
-        # 3. Göz Yapısı
+        # =====================================================
+        # 3. GÖZ YAPISI
+        # =====================================================
         eyes_info = features.annotations.get('eyes', {})
         e_size = eyes_info.get('size', 'Normal')
         e_slant = eyes_info.get('slant', 'Düz')
+        e_depth_cat = eyes_info.get('depth', 'Normal')
 
-        if e_size == 'Küçük':
-            add_finding('goz_yapisi', "Kısık ve İnce Gözler (Avcı)", 'negative') # Kurnaz
-        if e_slant == 'Düşük':
+        # Göz Büyüklüğü
+        if e_size == 'Büyük':
+            add_finding('goz_yapisi', "Büyük Gözler", 'positive')
+        elif e_size == 'Küçük':
+            add_finding('goz_yapisi', "Kısık ve İnce Gözler (Avcı)", 'negative')
+        
+        # Göz Eğimi
+        if e_slant == 'Düşük' or e_slant == 'Aşağı':
             add_finding('goz_yapisi', "Dış Kantus Aşağı Eğik", 'negative')
         
-        # 4. Burun Yapısı
+        # Göz Derinliği (Çukur vs Pörtlek)
+        eye_depth = features.metrics.get('eye_depth', 0)
+        if e_depth_cat == 'Çukur' or eye_depth > 0.02:
+            add_finding('goz_yapisi', "Çukur Gözler", 'neutral')
+        elif e_depth_cat == 'Çıkık' or eye_depth < -0.01:
+            add_finding('goz_yapisi', "Pörtlek (Dışarı Çıkık) Gözler", 'negative')
+
+        # =====================================================
+        # 4. BURUN YAPISI
+        # =====================================================
         nose_info = features.annotations.get('nose', {})
         n_width = nose_info.get('width', 'Normal')
         n_length = nose_info.get('length', 'Normal')
-        n_shape = nose_info.get('shape', 'Normal')
+        n_bridge = nose_info.get('bridge', 'Normal')
         n_tip = nose_info.get('tip', 'Normal')
         
-        if n_shape == 'Gaga' or n_tip == 'Düşük':
-            add_finding('burun_yapisi', "Gaga Burun (Ucu Aşağı Düşük)", 'negative') # Kurnaz
-        elif n_width == 'Geniş':
-             add_finding('burun_yapisi', "Geniş Burun Delikleri", 'negative')
-        elif n_length == 'Uzun':
-             add_finding('burun_yapisi', "Büyük ve Etli Burun", 'neutral')
+        # Burun Kemeri
+        if n_bridge == 'Kemerli':
+            add_finding('burun_yapisi', "Kemerli Burun", 'positive')
+        
+        # Burun Ucu
+        if n_tip == 'Kalkık':
+            add_finding('burun_yapisi', "Burun Ucu Kalkık", 'positive')  # Cömert
+        elif n_tip == 'Düşük':
+            add_finding('burun_yapisi', "Gaga Burun (Ucu Aşağı Düşük)", 'negative')
+            
+        # Burun Genişliği
+        if n_width == 'Geniş':
+            add_finding('burun_yapisi', "Geniş Burun Delikleri", 'negative')
+        elif n_width == 'Dar' or n_width == 'İnce':
+            add_finding('burun_yapisi', "İnce Burun", 'neutral')
+            
+        # Burun Uzunluğu
+        if n_length == 'Uzun':
+            add_finding('burun_yapisi', "Büyük ve Etli Burun", 'neutral')
 
-        # 5. Dudaklar ve Ağız
+        # Burun Ucu Şekli (Yuvarlak = Top Burun)
+        nose_tip_angle = features.metrics.get('nose_tip_angle', 90)
+        if nose_tip_angle > 105:
+            add_finding('burun_yapisi', "Top Burun (Yuvarlak Uçlu)", 'positive')
+
+        # =====================================================
+        # 5. DUDAKLAR VE AĞIZ
+        # =====================================================
         lips_info = features.annotations.get('lips', {})
         l_upper = lips_info.get('upper_thickness', 'Normal')
         l_lower = lips_info.get('lower_thickness', 'Normal')
+        l_width = lips_info.get('width', 'Normal')
         
-        if l_upper == 'İnce':
+        # Üst Dudak
+        if l_upper == 'Kalın':
+            add_finding('filtrum_ve_dudaklar', "Kalın Üst Dudak", 'positive')
+        elif l_upper == 'İnce':
             add_finding('filtrum_ve_dudaklar', "İnce Üst Dudak", 'neutral')
+        
+        # Alt Dudak
         if l_lower == 'Kalın':
             add_finding('filtrum_ve_dudaklar', "Kalın Alt Dudak", 'positive')
+        
+        # Ağız Kenarı Açısı (Mutlu/Somurtkan yüz)
+        mouth_corner_drop = features.metrics.get('mouth_corner_drop', 0)
+        if mouth_corner_drop > 0.008:
+            # Kenarlar aşağı düşük -> Somurtkan/Kindar ifade
+            report['analysis']['neutral'].append({
+                "trait": "Aşağı Düşük Ağız Kenarları",
+                "description": "Ağız kenarlarının aşağı düşmesi memnuniyetsizlik veya kararlılık işareti olabilir."
+            })
+            tag_counts["Kindar"] += 1
+            tag_counts["Memnuniyetsiz"] += 1
+        elif mouth_corner_drop < -0.005:
+            # Kenarlar yukarı kalkık -> Neşeli/Cömert ifade
+            report['analysis']['positive'].append({
+                "trait": "Yukarı Kalkık Ağız Kenarları",
+                "description": "Doğuştan gülümseyen ağız yapısı iyimserlik ve cömertlik işareti."
+            })
+            tag_counts["Cömert"] += 1
+            tag_counts["Dışa_Dönük"] += 1
 
-        # 6. Çene
+        # =====================================================
+        # 6. ÇENE VE YANAKLAR
+        # =====================================================
         chin_info = features.annotations.get('chin', {})
         c_width = chin_info.get('width', 'Normal')
+        c_prominence = chin_info.get('prominence', 'Normal')
+        c_dimple = chin_info.get('dimple', 'Yok')
 
+        # Çene Genişliği
         if c_width == 'Geniş':
-             add_finding('cene_ve_yanaklar', "Geniş ve Köşeli Çene", 'positive')
+            add_finding('cene_ve_yanaklar', "Geniş ve Köşeli Çene", 'positive')
         elif c_width == 'Dar':
-             add_finding('cene_ve_yanaklar', "Sivri Çene", 'neutral')
+            add_finding('cene_ve_yanaklar', "Sivri Çene", 'neutral')
+            
+        # Çene Çıkıklığı
+        if c_prominence == 'Çıkık':
+            report['analysis']['positive'].append({
+                "trait": "Çıkık Çene",
+                "description": "Güçlü irade ve kararlılık göstergesi."
+            })
+            tag_counts["İradeli"] += 1
+            tag_counts["Mücadeleci"] += 1
+        elif c_prominence == 'Geride':
+            add_finding('cene_ve_yanaklar', "Geride (Çekik) Çene", 'negative')
+        
+        # Gamze
+        if c_dimple == 'Var':
+            add_finding('cene_ve_yanaklar', "Gamzeli Çene", 'positive')
+        
+        # Elmacık Kemiği Belirginliği
+        cheek_jaw_ratio = features.metrics.get('cheek_jaw_ratio', 1.0)
+        if cheek_jaw_ratio > 1.25:
+            add_finding('cene_ve_yanaklar', "Elmacık Kemiği Belirgin", 'positive')
+            
+        # =====================================================
+        # 7. YÜZSEL ASİMETRİ KONTROLÜ
+        # =====================================================
+        forehead_asym = features.metrics.get('forehead_asymmetry', 0)
+        if abs(forehead_asym) > 0.015:
+            report['analysis']['neutral'].append({
+                "trait": "Yüzsel Asimetri Tespit Edildi",
+                "description": "Yüzün sağ ve sol tarafı arasında belirgin bir asimetri mevcut. Bu iç dünyada çatışma veya çift karakterli yapıya işaret edebilir."
+            })
+            tag_counts["Dengesiz"] += 1
+            tag_counts["Tutarsız"] += 1
 
         # --- Çapraz Doğrulama Hesaplaması (Map-Reduce) ---
         bilişsel_tags = {"Zeki", "Entelektüel", "Analitik", "Detaycı", "Mükemmeliyetçi", "Hafızası_Güçlü", "Odak_Problemi", "Sabit_Fikirli", "Dar_Görüşlü", "Pratik", "Gözlemci"}
