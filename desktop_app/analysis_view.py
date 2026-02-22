@@ -1356,7 +1356,9 @@ class AnalysisView(QWidget):
             q_side = QImage(rgb_side.data, w, h, bytes_per_line, QImage.Format_RGB888)
             side_pixmap = QPixmap.fromImage(q_side)
             self.current_side_pixmap = side_pixmap
-            self.display_image(side_pixmap, self.side_img_label)
+            # Ön profil gibi ortalanmış gösterim
+            self.side_img_label.original_pixmap = side_pixmap
+            QTimer.singleShot(10, lambda: self.update_image_scaling(self.side_img_label, force=True))
         else:
             self.side_img_label.setText("Yan profil yok")
             self.current_side_pixmap = None
@@ -1380,8 +1382,8 @@ class AnalysisView(QWidget):
                 center = np.mean(pos, axis=0)
                 pos = pos - center
                 
-                # Scale for better view
-                scale = 300.0
+                # Scale for better view (küçük tutarak widget'a sığdır)
+                scale = 150.0
                 pos = pos * scale
                 
                 # Flip Y axis to correct orientation (MediaPipe Y is inverted)
@@ -1455,7 +1457,7 @@ class AnalysisView(QWidget):
                 # Fallback to scatter plot
                 pos = np.array(points_3d, dtype=np.float32)
                 center = np.mean(pos, axis=0)
-                pos = (pos - center) * 300.0
+                pos = (pos - center) * 150.0
                 pos[:, 1] = -pos[:, 1]
                 sp = gl.GLScatterPlotItem(pos=pos, color=(0.5, 0.7, 1.0, 0.8), size=2, pxMode=True)
                 self.view_3d.addItem(sp)
@@ -1466,8 +1468,8 @@ class AnalysisView(QWidget):
             g.setDepthValue(10)
             self.view_3d.addItem(g)
             
-            # Set better camera angle for face viewing
-            self.view_3d.setCameraPosition(distance=250, elevation=10, azimuth=0)
+            # Set better camera angle for face viewing (uzaktan, ortalı)
+            self.view_3d.setCameraPosition(distance=400, elevation=5, azimuth=0)
         else:
             self.view_3d.hide()
             self.controls_3d_widget.hide()

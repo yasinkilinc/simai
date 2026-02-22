@@ -241,6 +241,41 @@ class RuleEngine:
             tag_counts["Dengesiz"] += 1
             tag_counts["Tutarsız"] += 1
 
+        # --- Çelişen Etiket Filtreleme ---
+        # Birbiriyle çelişen etiket çiftleri: (A, B) -> A ve B aynı anda bulunamaz
+        # Daha yüksek puana sahip olan kalır, diğeri silinir
+        conflicting_pairs = [
+            ("Geveze", "Ketum"),
+            ("Geveze", "Sır_Küpü"),
+            ("Açık_Sözlü", "Sır_Küpü"),
+            ("Açık_Sözlü", "Ketum"),
+            ("Cesur", "Korkak"),
+            ("Sabırlı", "Sabırsız"),
+            ("Dışa_Dönük", "İçten_Pazarlıklı"),
+            ("Cömert", "Bencil"),
+            ("Cömert", "Maddiyatçı"),
+            ("Lider", "Pasif"),
+            ("İradeli", "Zayıf_İrade"),
+            ("Güçlü", "Kırılgan"),
+            ("Hırslı", "Pasif"),
+            ("Mücadeleci", "Çekimser"),
+            ("Diplomatik", "Sert"),
+            ("Uyumlu", "İnatçı"),
+            ("Duygusal", "Soğukkanlı"),
+            ("Vizyoner", "Dar_Görüşlü"),
+            ("Enerjik", "Düşük_Enerji"),
+            ("Güvenilir", "Güvenilmez"),
+            ("Dürüst", "Yalancı"),
+        ]
+        
+        for tag_a, tag_b in conflicting_pairs:
+            if tag_a in tag_counts and tag_b in tag_counts:
+                # Daha yüksek skora sahip olanı tut, diğerini sil
+                if tag_counts[tag_a] >= tag_counts[tag_b]:
+                    del tag_counts[tag_b]
+                else:
+                    del tag_counts[tag_a]
+
         # --- Çapraz Doğrulama Hesaplaması (Map-Reduce) ---
         bilişsel_tags = {"Zeki", "Entelektüel", "Analitik", "Detaycı", "Mükemmeliyetçi", "Hafızası_Güçlü", "Odak_Problemi", "Sabit_Fikirli", "Dar_Görüşlü", "Pratik", "Gözlemci"}
         sosyal_tags = {"İletişimi_Güçlü", "Diplomatik", "Dışa_Dönük", "İçten_Pazarlıklı", "Geveze", "Sivri_Dilli", "Açık_Sözlü", "Ketum", "Sır_Küpü", "Manipülatif", "Yalancı", "Güvenilmez", "Kibirli", "Lider", "Narsist", "Uyumlu", "Bireysel"}
@@ -261,8 +296,6 @@ class RuleEngine:
                     "count": count
                 })
             
-            # Detaylı analiz için tek geçişte bile olanları toplayalım ama vurguyu farklı yapabiliriz
-            # Şimdilik yüzdeki tüm tespit edilen etiketleri listele
             if count >= 1:
                 if tag in bilişsel_tags:
                     detailed_analysis["Zihin ve Bilişsel Yapı"].append(trait_name)
