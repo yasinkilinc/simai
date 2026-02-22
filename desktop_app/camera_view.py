@@ -49,8 +49,8 @@ class CameraThread(QThread):
         self.camera_id = camera_id
         self._is_running = False
         self.camera = None
-        self.res_width = 1280
-        self.res_height = 720
+        self.res_width = 1920
+        self.res_height = 1080
 
     def run(self):
         self._is_running = True
@@ -166,13 +166,13 @@ class CameraView(QWidget):
         res_layout = QHBoxLayout()
         res_layout.addWidget(QLabel("📷 Çözünürlük:"))
         self.resolution_slider = QSlider(Qt.Horizontal)
-        self.resolution_slider.setRange(1, 3)  # 1=Low, 2=Medium, 3=High
-        self.resolution_slider.setValue(2)
+        self.resolution_slider.setRange(1, 4)  # 1=Low, 2=Medium, 3=High, 4=4K
+        self.resolution_slider.setValue(3)  # Default: Yüksek (1920x1080)
         self.resolution_slider.setEnabled(False)
         self.resolution_slider.valueChanged.connect(self.apply_resolution_change)
         res_layout.addWidget(self.resolution_slider)
-        self.resolution_label = QLabel("Orta (1280x720)")
-        self.resolution_label.setFixedWidth(120)
+        self.resolution_label = QLabel("Yüksek (1920x1080)")
+        self.resolution_label.setFixedWidth(150)
         res_layout.addWidget(self.resolution_label)
         adjust_layout.addLayout(res_layout)
         
@@ -410,7 +410,8 @@ class CameraView(QWidget):
         res_names = {
             1: ("Düşük", "640x480", 640, 480),
             2: ("Orta", "1280x720", 1280, 720),
-            3: ("Yüksek", "1920x1080", 1920, 1080)
+            3: ("Yüksek", "1920x1080", 1920, 1080),
+            4: ("4K", "3840x2160", 3840, 2160)
         }
         name, pixels, w, h = res_names[res_value]
         self.resolution_label.setText(f"{name} ({pixels})")
@@ -445,14 +446,14 @@ class CameraView(QWidget):
         self.display_label.setPixmap(QPixmap.fromImage(qt_image))
     
     def capture_photo(self):
-        """Fotoğraf çek"""
+        """Fotoğraf çek - kamera açık kalır ve otomatik slot geçişi yapar"""
         if self.current_frame is not None:
             # Save to current slot
             self.images[self.active_slot] = self.current_frame.copy()
             
-            # Update slot button text/icon (optional)
+            # Update slot button text/icon
             btn = self.btn_slot_front if self.active_slot == 'front' else self.btn_slot_side
-            btn.setText(f"{'Ön Yüz' if self.active_slot == 'front' else 'Yan Profil'} (✅ Hazır)")
+            btn.setText(f"{'ÖnYüz' if self.active_slot == 'front' else 'Yan Profil'} (✅ Hazır)")
             
             # Enable analyze button if front photo exists
             if self.images['front'] is not None:
@@ -460,14 +461,23 @@ class CameraView(QWidget):
             
             self.status_message.emit(f"✅ {self.active_slot.capitalize()} fotoğrafı çekildi")
             
-            # Stop camera and show captured image
-            if self.camera_thread is not None and self.camera_thread.isRunning():
-                self.camera_thread.stop()
-                self.btn_start_camera.setEnabled(True)
-                self.btn_capture.setEnabled(False)
-                
-            self.display_frame(self.images[self.active_slot])
+            # Kamerayı KAPATMA - açık bırak
+            # Ön profil çekildiyse otomatik yan profile geç
+            if self.active_slot == 'front' and self.images['side'] is None:
+                self.set_active_slot('side')
+                self.status_message.emit("✅ Ön yüz hazır! Şimdi yan profilinizi çekin (veya analiz edin)")
+            elif self.active_slot == 'side':
+                # İki foto da çekildiyse kamerayı durdur
+                if self.camera_thread is not None and self.camera_thread.isRunning():
+                    self.camera_thread.stop()
+                    self.btn_start_camera.setEnabled(True)
+                    self.btn_capture.setEnabled(False)
+                self.display_frame(self.images[self.active_slot])
+                self.status_message.emit("✅ Her iki fotoğraf hazır! Analiz edebilirsiniz →")
+            
             self.btn_save.setEnabled(True)
+            self.btn_retake.setVisible(True)
+            self.update_retake_button_text()
             
     def select_from_file(self):
         """Dosyadan fotoğraf seç"""

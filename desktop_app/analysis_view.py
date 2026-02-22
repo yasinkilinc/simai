@@ -1373,8 +1373,7 @@ class AnalysisView(QWidget):
             self.view_3d.items = []
             
             try:
-                from mediapipe.python.solutions.face_mesh_connections import FACEMESH_TESSELATION
-                from collections import defaultdict
+                from scipy.spatial import Delaunay
                 
                 pos = np.array(points_3d, dtype=np.float32)
                 
@@ -1382,45 +1381,49 @@ class AnalysisView(QWidget):
                 center = np.mean(pos, axis=0)
                 pos = pos - center
                 
-                # Scale for better view (küçük tutarak widget'a sığdır)
-                scale = 150.0
-                pos = pos * scale
-                
-                # Flip Y axis to correct orientation (MediaPipe Y is inverted)
+                # Flip Y axis (MediaPipe Y is inverted)
                 pos[:, 1] = -pos[:, 1]
                 
-                # Build triangles from FACEMESH_TESSELATION edges
-                adj = defaultdict(set)
-                for a, b in FACEMESH_TESSELATION:
-                    if a < len(pos) and b < len(pos):
-                        adj[a].add(b)
-                        adj[b].add(a)
+                # Auto-scale: normalize to fit nicely in view
+                bbox_size = pos.max(axis=0) - pos.min(axis=0)
+                max_extent = max(bbox_size[0], bbox_size[1])
+                if max_extent > 0:
+                    scale_factor = 80.0 / max_extent  # Fit in ~80 unit box
+                    pos = pos * scale_factor
                 
-                triangles = set()
-                for a in adj:
-                    for b in adj[a]:
-                        common = adj[a] & adj[b]
-                        for c in common:
-                            tri = tuple(sorted([a, b, c]))
-                            triangles.add(tri)
+                # Delaunay triangulation on X,Y projection
+                points_2d = pos[:, :2]
+                tri = Delaunay(points_2d)
+                faces = tri.simplices.astype(np.uint32)
                 
-                faces = np.array(list(triangles), dtype=np.uint32)
+                # Filter out overly large triangles (artifacts at face edge)
+                if len(faces) > 0:
+                    # Calculate edge lengths for each triangle
+                    valid_mask = np.ones(len(faces), dtype=bool)
+                    max_edge_threshold = max_extent * scale_factor * 0.15  # %15 of face size
+                    
+                    for i, face in enumerate(faces):
+                        v0, v1, v2 = pos[face[0]], pos[face[1]], pos[face[2]]
+                        e1 = np.linalg.norm(v1 - v0)
+                        e2 = np.linalg.norm(v2 - v1)
+                        e3 = np.linalg.norm(v0 - v2)
+                        if max(e1, e2, e3) > max_edge_threshold:
+                            valid_mask[i] = False
+                    
+                    faces = faces[valid_mask]
                 
                 if len(faces) > 0:
-                    # Color gradient based on Z depth for a nicer look
+                    # Color gradient based on Z depth
                     z = pos[:, 2]
                     z_diff = z.max() - z.min()
-                    if z_diff > 0:
-                        z_norm = (z - z.min()) / z_diff
-                    else:
-                        z_norm = np.zeros_like(z)
+                    z_norm = (z - z.min()) / z_diff if z_diff > 0 else np.zeros_like(z)
                     
-                    # Create per-vertex colors (metallic blue to cyan gradient)
+                    # Skin-like color palette (warm tones)
                     colors = np.zeros((len(pos), 4), dtype=np.float32)
-                    colors[:, 0] = 0.2 + z_norm * 0.3   # R: subtle red tint on depth
-                    colors[:, 1] = 0.5 + z_norm * 0.4   # G: green shift
-                    colors[:, 2] = 0.8 + z_norm * 0.2   # B: strong blue base
-                    colors[:, 3] = 0.85                   # Alpha
+                    colors[:, 0] = 0.55 + z_norm * 0.25  # R: warm base
+                    colors[:, 1] = 0.42 + z_norm * 0.2   # G: subtle green
+                    colors[:, 2] = 0.35 + z_norm * 0.15  # B: less blue
+                    colors[:, 3] = 0.92                    # Alpha
                     
                     mesh = gl.GLMeshItem(
                         vertexes=pos,
@@ -1434,42 +1437,38 @@ class AnalysisView(QWidget):
                     )
                     self.view_3d.addItem(mesh)
                     
-                    # Add subtle wireframe overlay
+                    # Subtle wireframe
                     wireframe = gl.GLMeshItem(
                         vertexes=pos,
                         faces=faces,
                         drawEdges=True,
                         drawFaces=False,
-                        edgeColor=(0.4, 0.6, 0.9, 0.15),
+                        edgeColor=(0.6, 0.5, 0.4, 0.08),
                         smooth=False,
                         glOptions='translucent'
                     )
                     self.view_3d.addItem(wireframe)
                 else:
-                    # Fallback to scatter if triangulation fails
-                    sp = gl.GLScatterPlotItem(pos=pos, color=(0.5, 0.7, 1.0, 0.8), size=2, pxMode=True)
+                    sp = gl.GLScatterPlotItem(pos=pos, color=(0.55, 0.42, 0.35, 0.8), size=2, pxMode=True)
                     self.view_3d.addItem(sp)
                     
             except Exception as e:
                 logging.error(f"3D Mesh oluşturma hatası: {e}")
                 import traceback
                 traceback.print_exc()
-                # Fallback to scatter plot
                 pos = np.array(points_3d, dtype=np.float32)
                 center = np.mean(pos, axis=0)
-                pos = (pos - center) * 150.0
+                pos = pos - center
                 pos[:, 1] = -pos[:, 1]
-                sp = gl.GLScatterPlotItem(pos=pos, color=(0.5, 0.7, 1.0, 0.8), size=2, pxMode=True)
+                bbox_size = pos.max(axis=0) - pos.min(axis=0)
+                max_ext = max(bbox_size[0], bbox_size[1])
+                if max_ext > 0:
+                    pos = pos * (80.0 / max_ext)
+                sp = gl.GLScatterPlotItem(pos=pos, color=(0.55, 0.42, 0.35, 0.8), size=2, pxMode=True)
                 self.view_3d.addItem(sp)
             
-            # Add grid for reference
-            g = gl.GLGridItem()
-            g.scale(20, 20, 1)
-            g.setDepthValue(10)
-            self.view_3d.addItem(g)
-            
-            # Set better camera angle for face viewing (uzaktan, ortalı)
-            self.view_3d.setCameraPosition(distance=400, elevation=5, azimuth=0)
+            # Camera: face-centered view
+            self.view_3d.setCameraPosition(distance=180, elevation=5, azimuth=0)
         else:
             self.view_3d.hide()
             self.controls_3d_widget.hide()
