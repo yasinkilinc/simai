@@ -10,9 +10,9 @@ from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QScrollArea, QFrame, QPushButton, QSplitter,
     QTabWidget, QGridLayout, QSizePolicy, QProgressBar,
-    QGroupBox, QFormLayout, QComboBox, QCheckBox
+    QGroupBox, QFormLayout, QComboBox, QCheckBox, QTextEdit
 )
-from PySide6.QtCore import Qt, QTimer, Signal
+from PySide6.QtCore import Qt, QTimer, Signal, QSize
 from PySide6.QtGui import QImage, QPixmap, QPainter, QColor, QFont, QPen
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
@@ -26,6 +26,35 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.visualization import Visualizer
 from annotation_engine import AutoAnnotator
 
+
+class AdaptiveImageLabel(QLabel):
+    """Resmi en boy oranını koruyarak widget'ın ortasına sığdıran akıllı QLabel"""
+    def __init__(self, text=""):
+        super().__init__(text)
+        self.setAlignment(Qt.AlignCenter)
+        self.original_pixmap = None
+        self._text = text
+        
+    def setPixmap(self, pixmap):
+        self.original_pixmap = pixmap
+        super().setPixmap(self._scaled_pixmap())
+        
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if hasattr(self, 'original_pixmap') and self.original_pixmap and not self.original_pixmap.isNull():
+            super().setPixmap(self._scaled_pixmap())
+            
+    def _scaled_pixmap(self):
+        if not self.original_pixmap or self.original_pixmap.isNull():
+            return QPixmap()
+        w, h = self.width(), self.height()
+        if w == 0 or h == 0:
+            return QPixmap()
+        return self.original_pixmap.scaled(
+            w, h, 
+            Qt.KeepAspectRatio, 
+            Qt.SmoothTransformation
+        )
 
 class AnalysisView(QWidget):
     """Detaylı analiz sonuçları görünümü"""
@@ -178,9 +207,7 @@ class AnalysisView(QWidget):
         front_layout = QVBoxLayout(front_tab)
         front_layout.setContentsMargins(0, 0, 0, 0)
         
-        self.img_label = QLabel("Analiz bekleniyor...")
-        self.img_label.setAlignment(Qt.AlignCenter)
-        # self.img_label.setScaledContents(True) # Removed to keep aspect ratio
+        self.img_label = AdaptiveImageLabel("Analiz bekleniyor...")
         self.img_label.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.img_label.setStyleSheet("background-color: #11111b; border-radius: 4px;")
         front_layout.addWidget(self.img_label)
@@ -192,9 +219,7 @@ class AnalysisView(QWidget):
         side_layout = QVBoxLayout(side_tab)
         side_layout.setContentsMargins(0, 0, 0, 0)
         
-        self.side_img_label = QLabel("Yan profil yok")
-        self.side_img_label.setAlignment(Qt.AlignCenter)
-        # self.side_img_label.setScaledContents(True) # Removed to keep aspect ratio
+        self.side_img_label = AdaptiveImageLabel("Yan profil yok")
         self.side_img_label.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.side_img_label.setStyleSheet("background-color: #11111b; border-radius: 4px;")
         side_layout.addWidget(self.side_img_label)
@@ -264,6 +289,13 @@ class AnalysisView(QWidget):
         
         parent_layout.addWidget(container, stretch=1)
     
+    def reset_3d_view(self):
+        """3D görünümünü başlangıç pozisyonuna sıfırla"""
+        self.view_3d.setCameraPosition(distance=180, elevation=5, azimuth=0)
+        self.rotation_timer.stop()
+        self.btn_rotate.setChecked(False)
+        self.rotation_angle = 0
+
     def create_data_section(self, parent_layout):
         """Veri ve sekmeler bölümünü oluştur"""
         # Tab Widget
@@ -547,18 +579,25 @@ class AnalysisView(QWidget):
             
         profile_layout.addStretch()
         
-        profile_layout.addStretch()
+        # AI Yorum Paragrafı (Yeni)
+        lbl_ai = QLabel("🧠 AI KARAKTER ANALİZİ")
+        lbl_ai.setStyleSheet("color: #a6e3a1; font-size: 11px; font-weight: bold; margin-top: 10px;")
+        profile_layout.addWidget(lbl_ai)
         
-        # 3. Footer (Energy/Score - Mockup) - REMOVED as per user request
-        # footer_layout = QHBoxLayout()
-        # lbl_energy = QLabel("Potansiyel:")
-        # lbl_energy.setStyleSheet("color: #a6adc8; font-size: 11px;")
-        # self.lbl_energy_val = QLabel("Yüksek")
-        # self.lbl_energy_val.setStyleSheet("color: #a6e3a1; font-weight: bold; font-size: 11px;")
-        # footer_layout.addWidget(lbl_energy)
-        # footer_layout.addWidget(self.lbl_energy_val)
-        # footer_layout.addStretch()
-        # profile_layout.addLayout(footer_layout)
+        self.text_ai_summary = QTextEdit()
+        self.text_ai_summary.setReadOnly(True)
+        self.text_ai_summary.setStyleSheet("""
+            QTextEdit {
+                background-color: #181825;
+                color: #cdd6f4;
+                border: 1px solid #313244;
+                border-radius: 6px;
+                padding: 10px;
+                font-size: 13px;
+                line-height: 1.5;
+            }
+        """)
+        profile_layout.addWidget(self.text_ai_summary, stretch=1)
         
         layout.addWidget(self.profile_card, stretch=3)
         
@@ -797,47 +836,6 @@ class AnalysisView(QWidget):
             return None
 
     def toggle_annotations(self, checked):
-        """Toggle between clean and annotated images"""
-        if not hasattr(self, 'clean_image') or self.clean_image is None:
-            return
-            
-        # Update button text
-        if checked:
-            self.btn_toggle_annotations.setText("🙈 Etiketleri Gizle")
-        else:
-            self.btn_toggle_annotations.setText("👁️ Etiketleri Göster")
-            
-        target_pixmap = None
-        
-        if checked:
-            # Show annotated image
-            if hasattr(self, 'annotated_image') and self.annotated_image is not None:
-                target_pixmap = self.annotated_image
-                print(f"DEBUG: Using cached annotated_image. Size: {target_pixmap.width()}x{target_pixmap.height()}")
-            else:
-                # Fallback: Generate if missing (shouldn't happen with new flow)
-                print("DEBUG: Annotated image missing, generating on fly...")
-                target_pixmap = self.generate_annotated_image(self.clean_image, self.landmarks)
-                self.annotated_image = target_pixmap # Cache it
-                if target_pixmap:
-                    print(f"DEBUG: Generated annotated_image. Size: {target_pixmap.width()}x{target_pixmap.height()}")
-        else:
-            # Show clean image
-            # Convert numpy to QPixmap
-            clean_img = self.clean_image
-            rgb_image = cv2.cvtColor(clean_img, cv2.COLOR_BGR2RGB)
-            h, w, ch = rgb_image.shape
-            bytes_per_line = ch * w
-            q_img = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
-            target_pixmap = QPixmap.fromImage(q_img)
-            print(f"DEBUG: Created clean pixmap. Size: {target_pixmap.width()}x{target_pixmap.height()}")
-            
-        if target_pixmap:
-            # CRITICAL: Update original_pixmap so resizeEvent doesn't revert
-            self.img_label.original_pixmap = target_pixmap
-            
-            # Use the centralized scaling method with FORCE update
-            self.update_image_scaling(self.img_label, force=True)
         """Toggle between clean and annotated images"""
         print(f"DEBUG toggle_annotations called, checked={checked}")
         
@@ -1547,10 +1545,10 @@ class AnalysisView(QWidget):
         self.shape_value.setText(str(shape))
             
         # Get top traits
-        analysis = report.get('analysis', {})
         top_traits = []
         
-        if isinstance(analysis, dict):
+        if isinstance(report.get('analysis'), dict):
+            analysis = report.get('analysis', {})
             # Collect all traits
             all_t = []
             if analysis.get('positive'): all_t.extend(analysis['positive'])
@@ -1569,17 +1567,50 @@ class AnalysisView(QWidget):
                     
                 top_traits.append(trait_text)
                     
+        # Clear existing layout and list
+        while self.traits_list_layout.count():
+            item = self.traits_list_layout.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+                
+        # Add labels
         if not top_traits:
-            top_traits = ["Analiz bekleniyor..."]
-            
-        for trait in top_traits:
-            lbl = QLabel(f"• {trait}")
-            lbl.setStyleSheet("color: #cdd6f4; font-size: 13px;")
-            lbl.setWordWrap(True)
+            lbl = QLabel("• Veri yok")
+            lbl.setStyleSheet("color: #6c7086; font-size: 13px; font-style: italic;")
             self.traits_list_layout.addWidget(lbl)
+        else:
+            for trait in top_traits[:5]: # Top 5
+                lbl = QLabel(f"• {trait}")
+                lbl.setStyleSheet("color: #cdd6f4; font-size: 13px; font-weight: bold;")
+                lbl.setWordWrap(True)
+                self.traits_list_layout.addWidget(lbl)
 
-
-
+        # --- AI Yorumunu Doldur ---
+        if 'analysis' in report:
+            ai_text = "Yüz hatlarınızın analizine göre genel karakter haritanız:\n\n"
+            
+            # Kategorileri birleştir
+            all_traits = []
+            for category in ["positive", "negative", "neutral"]:
+                if category in report['analysis']:
+                    for trait in report['analysis'][category]:
+                        if trait not in all_traits:
+                            all_traits.append(trait)
+            
+            if all_traits:
+                # Dinamik bir paragraf oluştur (basit bir template ile)
+                ai_text += f"Bu analize göre genel olarak {', '.join(all_traits[:3])} gibi özellikler öne çıkıyor. "
+                if len(all_traits) > 3:
+                    ai_text += f"Bunun yanı sıra {', '.join(all_traits[3:6])} yönleriniz de bulunmakta. "
+                
+                ai_text += "Yüzünüzdeki metrik orantılar (alın, göz, burun, çene uyumu) karakterinizde çeşitli denge unsurlarını işaret ediyor."
+            else:
+                ai_text = "Analiz edilecek yeterli özellik bulunamadı."
+                
+            self.text_ai_summary.setHtml(f"<b>Fizyonomi AI Yorumu:</b><br><br>{ai_text}")
+        else:
+            self.text_ai_summary.setHtml("<em>Analiz yapılamadı.</em>")
+            
     def create_heatmap(self, image, report, landmarks=None):
         """
         Yenilenmiş Isı Haritası ve Yüz Ortalama Mantığı.
@@ -1878,8 +1909,8 @@ class AnalysisView(QWidget):
         self.rotation_angle = 0
         self.view_3d.setCameraPosition(
             azimuth=0,
-            elevation=20,
-            distance=500
+            elevation=5,
+            distance=180
         )
         if self.btn_rotate.isChecked():
             self.btn_rotate.click()
